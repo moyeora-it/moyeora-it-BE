@@ -36,66 +36,81 @@ enum Skill {
   Spring
 }
 
+enum Provider {
+  KAKAO
+  GOOGLE
+  NAVER
+}
+
 model User {
   id           Int            @id @default(autoincrement())
-  email        String         @unique
-  password     String
-  nickname     String
+  email        String?        @unique
+  password     String?
+  nickname     String?
   profileImage String?
+  provider     Provider? // 소셜 로그인 종류
+  providerId   String? // 해당 소셜 로그인의 고유 id
   createdAt    DateTime       @default(now())
   updatedAt    DateTime       @updatedAt
+  isDeleted    Boolean        @default(false)
   position     Position
   skills       Skill[]
-  Group        Group?         @relation(fields: [groupId], references: [id])
-  groupId      Int?
+  Group        Group[]
   replies      Reply[]
-  NestedReply  NestedReply[]
   Bookmark     Bookmark[]
   followers    Follow[]       @relation("Follower")
   following    Follow[]       @relation("Following")
   Notification Notification[]
   Rating       Rating[]
+  WaitingList  WaitingList[]
 }
 
 model Group {
-  id              Int        @id @default(autoincrement())
+  id              Int           @id @default(autoincrement())
   title           String
   deadline        DateTime // 모임 모집 마감일
   startDate       DateTime // 모임 시작일
+  content         String
   endDate         DateTime // 모임 종료일
   maxParticipants Int // 모임 최대 참여 인원
   positions       Position[]
+  firstUserId     Int? // 방장 유저 아이디
+  views           Int           @default(0)
   skills          Skill[]
   type            String //study, project, all
+  status          Boolean       @default(true) // 모집 상태 기본값 True
   autoAllow       Boolean
-  createdAt       DateTime   @default(now())
-  updatedAt       DateTime   @updatedAt
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
   users           User[]
   Reply           Reply[]
   Bookmark        Bookmark[]
+  WaitingList     WaitingList[]
 }
 
-model Reply {
-  id          Int           @id @default(autoincrement())
-  content     String
-  createdAt   DateTime      @default(now())
-  updatedAt   DateTime      @updatedAt
-  User        User?         @relation(fields: [userId], references: [id])
-  userId      Int?
-  Group       Group?        @relation(fields: [groupId], references: [id])
-  groupId     Int?
-  NestedReply NestedReply[]
-}
-
-model NestedReply {
+// 그룹 대기열 테이블
+model WaitingList {
   id        Int      @id @default(autoincrement())
-  content   String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   User      User?    @relation(fields: [userId], references: [id])
   userId    Int?
-  Reply     Reply    @relation(fields: [replyId], references: [id])
-  replyId   Int
+  Group     Group?   @relation(fields: [groupId], references: [id])
+  groupId   Int?
+  status    Boolean  @default(false) // 대기열 상태 기본값 False
+}
+
+model Reply {
+  id        Int      @id @default(autoincrement())
+  content   String
+  parentId  Int? // 대댓글 구분 용도
+  isDeleted Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  User      User?    @relation(fields: [userId], references: [id])
+  userId    Int?
+  Group     Group?   @relation(fields: [groupId], references: [id])
+  groupId   Int?
 }
 
 model Bookmark {
