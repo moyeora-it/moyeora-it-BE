@@ -52,7 +52,7 @@ model User {
   createdAt    DateTime       @default(now())
   updatedAt    DateTime       @updatedAt
   isDeleted    Boolean        @default(false)
-  position     Position
+  position     Position?
   skills       Skill[]
   Group        Group[]
   replies      Reply[]
