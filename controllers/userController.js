@@ -71,6 +71,16 @@ const checkEmailAuth = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+const login = async (req, res) => {
+  const { email, password } = req.body;
+  try {
+    await userService.login(email, password);
+    res.status(200).json('로그인 성공');
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
 export default {
   signup,
   deleteUser,
@@ -78,4 +88,5 @@ export default {
   editUserInfo,
   FindEmailAuth,
   checkEmailAuth,
+  login,
 };

@@ -1,4 +1,5 @@
 import prisma from '../config/prisma.js';
+import bcrypt from 'bcrypt';
 
 const createUser = async (email, password) => {
   if (!email || !password) {
@@ -71,10 +72,23 @@ const checkEmailAuth = async (email, authNum) => {
   }
   return user;
 };
+
+const login = async (email, password) => {
+  const user = await prisma.user.findUnique({
+    where: { email },
+  });
+  const isPasswordValid = await bcrypt.compare(password, user.password);
+  if (!isPasswordValid) {
+    throw new Error('비밀번호가 일치하지 않습니다.');
+  }
+  return;
+};
+
 export default {
   createUser,
   deleteUser,
   getUserInfo,
   editUserInfo,
   checkEmailAuth,
+  login,
 };

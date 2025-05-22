@@ -27,10 +27,16 @@ const checkEmailAuth = async (email, authNum) => {
   return user;
 };
 
+const login = async (email, password) => {
+  const user = await userRepository.login(email, password);
+  return user;
+};
+
 export default {
   createUser,
   deleteUser,
   getUserInfo,
   editUserInfo,
   checkEmailAuth,
+  login,
 };
