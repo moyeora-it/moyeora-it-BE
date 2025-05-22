@@ -1,5 +1,6 @@
 import userService from '../services/userServies.js';
 import { sendEmailAuth } from '../config/SMTP.js';
+import { accessTokenOption, refreshTokenOption } from '../config/cookie.js';
 
 const signup = async (req, res) => {
   const { email, password } = req.body;
@@ -76,6 +77,11 @@ const login = async (req, res) => {
   const { email, password } = req.body;
   try {
     await userService.login(email, password);
+    const user = await userService.getUserByEmail(email);
+    const accessToken = userService.createAccessToken(user);
+    const refreshToken = userService.createAccessToken(user, 'refresh');
+    res.cookie('accessToken', accessToken, accessTokenOption);
+    res.cookie('refreshToken', refreshToken, refreshTokenOption);
     res.status(200).json('로그인 성공');
   } catch (error) {
     res.status(500).json({ message: error.message });

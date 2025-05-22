@@ -84,6 +84,17 @@ const login = async (email, password) => {
   return;
 };
 
+const getUserByEmail = async (email) => {
+  const user = await prisma.user.findUnique({
+    where: { email },
+    select: {
+      id: true,
+      email: true,
+    },
+  });
+  return user;
+};
+
 export default {
   createUser,
   deleteUser,
@@ -91,4 +102,5 @@ export default {
   editUserInfo,
   checkEmailAuth,
   login,
+  getUserByEmail,
 };

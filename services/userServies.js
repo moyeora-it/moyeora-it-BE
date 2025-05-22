@@ -1,5 +1,9 @@
 import userRepository from '../repositorys/userRepository.js';
 import bcrypt from 'bcrypt';
+import dotenv from 'dotenv';
+import jwt from 'jsonwebtoken';
+
+dotenv.config();
 
 const createUser = async (email, password) => {
   const hashedPassword = await bcrypt.hash(password, 10);
@@ -32,6 +36,20 @@ const login = async (email, password) => {
   return user;
 };
 
+const createAccessToken = async (user, type) => {
+  const payload = {
+    userId: user.id,
+    email: user.email,
+  };
+  const option = { expiresIn: type ? '1w' : '3h' };
+  return jwt.sign(payload, process.env.TOKEN_SECRET, option);
+};
+
+const getUserByEmail = async (email) => {
+  const user = await userRepository.getUserByEmail(email);
+  return user;
+};
+
 export default {
   createUser,
   deleteUser,
@@ -39,4 +57,6 @@ export default {
   editUserInfo,
   checkEmailAuth,
   login,
+  getUserByEmail,
+  createAccessToken,
 };
