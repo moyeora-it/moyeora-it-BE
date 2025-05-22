@@ -42,26 +42,27 @@ enum Provider {
 }
 
 model User {
-  id           Int            @id @default(autoincrement())
-  email        String?        @unique
-  password     String?
-  nickname     String?
-  profileImage String?
-  provider     Provider? // 소셜 로그인 종류
-  providerId   String? // 해당 소셜 로그인의 고유 id
-  createdAt    DateTime       @default(now())
-  updatedAt    DateTime       @updatedAt
-  isDeleted    Boolean        @default(false)
-  position     Position?
-  skills       Skill[]
-  Group        Group[]
-  replies      Reply[]
-  Bookmark     Bookmark[]
-  followers    Follow[]       @relation("Follower")
-  following    Follow[]       @relation("Following")
-  Notification Notification[]
-  Rating       Rating[]
-  WaitingList  WaitingList[]
+  id                  Int            @id @default(autoincrement())
+  email               String?        @unique
+  password            String?
+  nickname            String?
+  profileImage        String?
+  provider            Provider? // 소셜 로그인 종류
+  providerId          String? // 해당 소셜 로그인의 고유 id
+  createdAt           DateTime       @default(now())
+  updatedAt           DateTime       @updatedAt
+  isDeleted           Boolean        @default(false)
+  position            Position?
+  skills              Skill[]
+  Group               Group[]
+  replies             Reply[]
+  Bookmark            Bookmark[]
+  followers           Follow[]       @relation("Follower")
+  following           Follow[]       @relation("Following")
+  Notification        Notification[]
+  Rating              Rating[]
+  WaitingList         WaitingList[]
+  emailAuthentication Int?
 }
 
 model Group {
