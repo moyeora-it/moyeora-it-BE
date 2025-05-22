@@ -35,30 +35,75 @@ const getUserInfo = async (userId) => {
   const user = await prisma.user.findUnique({
     where: { id: userId },
     select: {
-      posts: true,
-      skills: true,
-      profileImage: true,
+      id: true,
+      email: true,
       nickname: true,
-    },
-    include: {
-      groups: true,
+      profileImage: true,
+      position: true,
+      skills: true,
+      Group: true,
       followers: true,
       following: true,
       Rating: true,
-      Waiting: true,
-      Bookmarks: true,
+      WaitingList: true,
+      Bookmark: true,
+      replies: true,
+      _count: true,
     },
   });
+
   if (!user) {
     throw new Error('존재하지 않는 유저입니다.');
   }
+
   return user;
 };
 
-const editUserInfo = async (userId, data) => {
+const editUserInfo = async (
+  id,
+  nickname,
+  position,
+  skills,
+  newPassword,
+  confirmPassword,
+  image
+) => {
+  if (newPassword || confirmPassword) {
+    if (!newPassword || !confirmPassword) {
+      throw new Error('새 비밀번호와 확인 비밀번호를 모두 입력해주세요.');
+    }
+
+    const currentUser = await prisma.user.findUnique({
+      where: { id: id },
+      select: { password: true },
+    });
+
+    if (!currentUser) {
+      throw new Error('사용자를 찾을 수 없습니다.');
+    }
+
+    const isCurrentPasswordValid = await bcrypt.compare(
+      confirmPassword,
+      currentUser.password
+    );
+
+    if (!isCurrentPasswordValid) {
+      throw new Error('현재 비밀번호가 일치하지 않습니다.');
+    }
+
+    const hashedNewPassword = await bcrypt.hash(newPassword, 10);
+    newPassword = hashedNewPassword;
+  }
+
   const user = await prisma.user.update({
-    where: { id: userId },
-    data,
+    where: { id: id },
+    data: {
+      nickname,
+      position,
+      skills,
+      ...(newPassword && { password: newPassword }),
+      ...(image && { profileImage: image }),
+    },
   });
   return user;
 };
@@ -77,6 +122,9 @@ const login = async (email, password) => {
   const user = await prisma.user.findUnique({
     where: { email },
   });
+  if (!user) {
+    throw new Error('존재하지 않는 이메일입니다.');
+  }
   const isPasswordValid = await bcrypt.compare(password, user.password);
   if (!isPasswordValid) {
     throw new Error('비밀번호가 일치하지 않습니다.');

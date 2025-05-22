@@ -21,8 +21,24 @@ const getUserInfo = async (userId) => {
   return user;
 };
 
-const editUserInfo = async (userId, data) => {
-  const user = await userRepository.editUserInfo(userId, data);
+const editUserInfo = async (
+  id,
+  nickname,
+  position,
+  skills,
+  newPassword,
+  confirmPassword,
+  image
+) => {
+  const user = await userRepository.editUserInfo(
+    id,
+    nickname,
+    position,
+    skills,
+    newPassword,
+    confirmPassword,
+    image
+  );
   return user;
 };
 
