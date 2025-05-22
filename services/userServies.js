@@ -22,4 +22,15 @@ const editUserInfo = async (userId, data) => {
   return user;
 };
 
-export default { createUser, deleteUser, getUserInfo, editUserInfo };
+const checkEmailAuth = async (email, authNum) => {
+  const user = await userRepository.checkEmailAuth(email, authNum);
+  return user;
+};
+
+export default {
+  createUser,
+  deleteUser,
+  getUserInfo,
+  editUserInfo,
+  checkEmailAuth,
+};

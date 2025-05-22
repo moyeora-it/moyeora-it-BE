@@ -61,4 +61,20 @@ const editUserInfo = async (userId, data) => {
   });
   return user;
 };
-export default { createUser, deleteUser, getUserInfo, editUserInfo };
+
+const checkEmailAuth = async (email, authNum) => {
+  const user = await prisma.user.findUnique({
+    where: { email },
+  });
+  if (user.emailAuthentication !== authNum) {
+    throw new Error('인증번호가 일치하지 않습니다.');
+  }
+  return user;
+};
+export default {
+  createUser,
+  deleteUser,
+  getUserInfo,
+  editUserInfo,
+  checkEmailAuth,
+};

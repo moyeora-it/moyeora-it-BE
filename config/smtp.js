@@ -1,5 +1,6 @@
 import nodemailer from 'nodemailer';
 import dotenv from 'dotenv';
+import prisma from '../prisma/prisma.js';
 
 dotenv.config();
 
@@ -47,6 +48,10 @@ export const sendEmailAuth = async (email) => {
           ok: true,
           msg: '메일 전송에 성공하였습니다.',
           authNum: number,
+        });
+        prisma.user.update({
+          where: { email },
+          data: { emailAuthentication: number },
         });
       }
     });

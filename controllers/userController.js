@@ -62,4 +62,20 @@ const FindEmailAuth = async (req, res) => {
   }
 };
 
-export default { signup, deleteUser, userInfo, editUserInfo, FindEmailAuth };
+const checkEmailAuth = async (req, res) => {
+  const { email, authNum } = req.body;
+  try {
+    const result = await userService.checkEmailAuth(email, authNum);
+    res.status(200).json(result);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+export default {
+  signup,
+  deleteUser,
+  userInfo,
+  editUserInfo,
+  FindEmailAuth,
+  checkEmailAuth,
+};
