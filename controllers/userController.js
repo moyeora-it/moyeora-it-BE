@@ -1,6 +1,11 @@
 import userService from '../services/userServies.js';
 import { sendEmailAuth } from '../config/SMTP.js';
-import { accessTokenOption, refreshTokenOption } from '../config/cookie.js';
+import {
+  accessTokenOption,
+  refreshTokenOption,
+  clearAccessTokenOption,
+  clearRefreshTokenOption,
+} from '../config/cookie.js';
 import bcrypt from 'bcrypt';
 
 const signup = async (req, res) => {
@@ -75,8 +80,8 @@ const FindEmailAuth = async (req, res) => {
 const checkEmailAuth = async (req, res) => {
   const { email, authNum } = req.body;
   try {
-    const result = await userService.checkEmailAuth(email, authNum);
-    res.status(200).json(result);
+    await userService.checkEmailAuth(email, authNum);
+    res.status(200).json({ message: '인증 성공' });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -98,6 +103,16 @@ const login = async (req, res) => {
   }
 };
 
+const logout = async (req, res) => {
+  try {
+    res.cookie('accessToken', null, clearAccessTokenOption);
+    res.cookie('refreshToken', null, clearRefreshTokenOption);
+    res.status(200).json({ message: '로그아웃 성공' });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 const refreshAccessToken = async (req, res) => {
   const { id, email } = req.user;
   const user = { id, email };
@@ -110,6 +125,15 @@ const refreshAccessToken = async (req, res) => {
   }
 };
 
+// const redisToLogin = async (req, res) => {
+//   const { email, password } = req.body;
+//   try {
+//     await userService.redisToLogin(email, password);
+//   } catch (error) {
+//     res.status(500).json({ message: error.message });
+//   }
+// };
+
 export default {
   signup,
   deleteUser,
@@ -119,4 +143,5 @@ export default {
   checkEmailAuth,
   login,
   refreshAccessToken,
+  logout,
 };
