@@ -56,7 +56,7 @@ const getUserInfo = async (userId) => {
     throw new Error('존재하지 않는 유저입니다.');
   }
 
-  return user;
+  return { items: user };
 };
 
 const editUserInfo = async (
@@ -143,6 +143,12 @@ const getUserByEmail = async (email) => {
   return user;
 };
 
+const getByUserId = async (userId) => {
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+  });
+  return user;
+};
 export default {
   createUser,
   deleteUser,
@@ -151,4 +157,5 @@ export default {
   checkEmailAuth,
   login,
   getUserByEmail,
+  getByUserId,
 };

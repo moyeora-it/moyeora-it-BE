@@ -6,7 +6,6 @@ import {
   clearAccessTokenOption,
   clearRefreshTokenOption,
 } from '../config/cookie.js';
-import bcrypt from 'bcrypt';
 
 const signup = async (req, res) => {
   const { email, password } = req.body;
@@ -33,6 +32,16 @@ const userInfo = async (req, res) => {
   const { id: userId } = req.user;
   try {
     const user = await userService.getUserInfo(userId);
+    res.status(200).json(user);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+const getByUserId = async (req, res) => {
+  const { userId } = req.params;
+  try {
+    const user = await userService.getByUserId(parseInt(userId));
     res.status(200).json(user);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -138,6 +147,7 @@ export default {
   signup,
   deleteUser,
   userInfo,
+  getByUserId,
   editUserInfo,
   FindEmailAuth,
   checkEmailAuth,
