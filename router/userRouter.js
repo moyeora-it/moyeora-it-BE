@@ -7,6 +7,7 @@ const router = express.Router();
 router.post('/signup', userController.signup); // 테스트완
 router.post('/email-auth', userController.FindEmailAuth); // 테스트완
 router.post('/login', userController.login); // 테스트완
+router.post('/check-email-auth', userController.checkEmailAuth); // 테스트완
 
 router.patch('/delete', jwtToken.accessVerifyToken, userController.deleteUser); // 테스트완
 router.get('/info', jwtToken.accessVerifyToken, userController.userInfo); // 테스트완
@@ -21,4 +22,5 @@ router.post(
   jwtToken.refreshVerifyToken,
   userController.refreshAccessToken
 );
+
 export default router;
