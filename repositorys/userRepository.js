@@ -38,16 +38,16 @@ const getUserInfo = async (userId) => {
       id: true,
       email: true,
       nickname: true,
-      profileImage: true,
+      profile_image: true,
       position: true,
       skills: true,
-      Group: true,
+      group: true,
       followers: true,
       following: true,
-      Rating: true,
-      WaitingList: true,
-      Bookmark: true,
-      replies: true,
+      rating: true,
+      waiting_list: true,
+      bookmark: true,
+      reply: true,
       _count: true,
     },
   });
@@ -102,7 +102,7 @@ const editUserInfo = async (
       position,
       skills,
       ...(newPassword && { password: newPassword }),
-      ...(image && { profileImage: image }),
+      ...(image && { profile_image: image }),
     },
   });
   return user;
@@ -158,4 +158,5 @@ export default {
   login,
   getUserByEmail,
   getByUserId,
+  getUserByEmail,
 };

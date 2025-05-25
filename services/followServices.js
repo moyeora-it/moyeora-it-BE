@@ -23,4 +23,20 @@ const createFollow = async (userId, targetUserId) => {
   return follow;
 };
 
-export default { getFollowers, getFollowing, createFollow };
+const deleteFollow = async (userId, targetUserId) => {
+  const follow = await followRepository.deleteFollow(userId, targetUserId);
+  return follow;
+};
+
+const deleteFollower = async (userId, targetUserId) => {
+  const follow = await followRepository.deleteFollower(userId, targetUserId);
+  return follow;
+};
+
+export default {
+  getFollowers,
+  getFollowing,
+  createFollow,
+  deleteFollow,
+  deleteFollower,
+};

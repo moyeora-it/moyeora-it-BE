@@ -11,4 +11,15 @@ router.post(
   jwtToken.accessVerifyToken,
   followController.createFollow
 );
+router.delete(
+  '/:userId/unfollow',
+  jwtToken.accessVerifyToken,
+  followController.deleteFollow
+);
+router.delete(
+  '/:userId/unfollower',
+  jwtToken.accessVerifyToken,
+  followController.deleteFollower
+);
+
 export default router;

@@ -1,8 +1,9 @@
 import prisma from '../config/prisma.js';
 
 const getFollowers = async (userId, size, nextCursor) => {
+  console.log(userId);
   const followers = await prisma.follow.findMany({
-    where: { followingId: userId },
+    where: { follower_id: userId },
     take: size,
     skip: nextCursor,
   });
@@ -14,12 +15,13 @@ const getFollowers = async (userId, size, nextCursor) => {
     items: followers,
     hasNext,
     cursor,
+    totalCount: followers.length,
   };
 };
 
 const getFollowing = async (userId, size, nextCursor) => {
   const following = await prisma.follow.findMany({
-    where: { followingId: userId },
+    where: { following_id: userId },
     take: size,
     skip: nextCursor,
   });
@@ -51,9 +53,9 @@ const createFollow = async (followerId, followingId) => {
   // 이미 존재하는 팔로우 관계인지 확인
   const existingFollow = await prisma.follow.findUnique({
     where: {
-      followerId_followingId: {
-        followerId,
-        followingId,
+      follower_id_following_id: {
+        follower_id: followerId,
+        following_id: followingId,
       },
     },
   });
@@ -64,10 +66,39 @@ const createFollow = async (followerId, followingId) => {
 
   return await prisma.follow.create({
     data: {
-      followerId,
-      followingId,
+      follower_id: followerId,
+      following_id: followingId,
     },
   });
 };
 
-export default { getFollowers, getFollowing, createFollow };
+const deleteFollow = async (userId, targetUserId) => {
+  const follow = await prisma.follow.delete({
+    where: {
+      follower_id_following_id: {
+        follower_id: userId,
+        following_id: targetUserId,
+      },
+    },
+  });
+  return follow;
+};
+
+const deleteFollower = async (userId, targetUserId) => {
+  const follow = await prisma.follow.delete({
+    where: {
+      follower_id_following_id: {
+        follower_id: targetUserId,
+        following_id: userId,
+      },
+    },
+  });
+  return follow;
+};
+export default {
+  getFollowers,
+  getFollowing,
+  createFollow,
+  deleteFollow,
+  deleteFollower,
+};

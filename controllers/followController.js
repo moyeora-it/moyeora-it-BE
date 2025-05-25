@@ -37,4 +37,35 @@ const createFollow = async (req, res) => {
   await followService.createFollow(parseInt(userId), parseInt(targetUserId));
   res.status(200).json({ message: '팔로우 성공' });
 };
-export default { getFollowers, getFollowing, createFollow };
+
+const deleteFollow = async (req, res) => {
+  const { id: userId } = req.user;
+  const { userId: targetUserId } = req.params;
+  try {
+    await followService.deleteFollow(parseInt(userId), parseInt(targetUserId));
+    res.status(200).json({ message: '팔로우 삭제 성공' });
+  } catch (error) {
+    res.status(400).json({ message: '팔로우 삭제 실패' });
+  }
+};
+
+const deleteFollower = async (req, res) => {
+  const { id: userId } = req.user;
+  const { userId: targetUserId } = req.params;
+  try {
+    await followService.deleteFollower(
+      parseInt(userId),
+      parseInt(targetUserId)
+    );
+    res.status(200).json({ message: '팔로우 삭제 성공' });
+  } catch (error) {
+    res.status(400).json({ message: '팔로우 삭제 실패' });
+  }
+};
+export default {
+  getFollowers,
+  getFollowing,
+  createFollow,
+  deleteFollow,
+  deleteFollower,
+};
