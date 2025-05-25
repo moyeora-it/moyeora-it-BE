@@ -26,28 +26,33 @@ const createUser = async (email, password) => {
 const deleteUser = async (userId) => {
   const user = await prisma.user.update({
     where: { id: userId },
-    data: { isDeleted: true },
+    data: { is_deleted: true },
   });
   return user;
 };
 
 const getUserInfo = async (userId) => {
+  console.log(userId);
   const user = await prisma.user.findUnique({
     where: { id: userId },
     select: {
       id: true,
       email: true,
       nickname: true,
-      profileImage: true,
+      profile_image: true,
       position: true,
       skills: true,
-      Group: true,
-      followers: true,
+      group: true,
+      follower: true,
       following: true,
-      Rating: true,
-      WaitingList: true,
-      Bookmark: true,
-      replies: true,
+      rated_ratings: {
+        select: {
+          rating: true,
+        },
+      },
+      waiting_list: true,
+      bookmark: true,
+      reply: true,
       _count: true,
     },
   });
@@ -56,7 +61,14 @@ const getUserInfo = async (userId) => {
     throw new Error('존재하지 않는 유저입니다.');
   }
 
-  return user;
+  const ratings = user.rated_ratings.map((r) => r.rating);
+  const averageRating =
+    ratings.length > 0
+      ? Math.round((ratings.reduce((a, b) => a + b, 0) / ratings.length) * 10) /
+        10
+      : 0;
+
+  return { items: user, averageRating };
 };
 
 const editUserInfo = async (
@@ -102,7 +114,7 @@ const editUserInfo = async (
       position,
       skills,
       ...(newPassword && { password: newPassword }),
-      ...(image && { profileImage: image }),
+      ...(image && { profile_image: image }),
     },
   });
   return user;
@@ -143,6 +155,33 @@ const getUserByEmail = async (email) => {
   return user;
 };
 
+const getByUserId = async (userId) => {
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+    select: {
+      email: true,
+      nickname: true,
+      profile_image: true,
+      position: true,
+      skills: true,
+      follower: true,
+      following: true,
+      _count: true,
+      rated_ratings: {
+        select: {
+          rating: true,
+        },
+      },
+    },
+  });
+  const ratings = user.rated_ratings.map((r) => r.rating);
+  const averageRating =
+    ratings.length > 0
+      ? Math.round((ratings.reduce((a, b) => a + b, 0) / ratings.length) * 10) /
+        10
+      : 0;
+  return { items: user, averageRating };
+};
 export default {
   createUser,
   deleteUser,
@@ -150,5 +189,7 @@ export default {
   editUserInfo,
   checkEmailAuth,
   login,
+  getUserByEmail,
+  getByUserId,
   getUserByEmail,
 };

@@ -66,6 +66,11 @@ const getUserByEmail = async (email) => {
   return user;
 };
 
+const getByUserId = async (userId) => {
+  const user = await userRepository.getByUserId(userId);
+  return user;
+};
+
 export default {
   createUser,
   deleteUser,
@@ -75,4 +80,5 @@ export default {
   login,
   getUserByEmail,
   createAccessToken,
+  getByUserId,
 };
