@@ -63,6 +63,8 @@ model user {
   rating               rating[]
   waiting_list         waiting_list[]
   email_authentication Int?
+  rater_ratings        rating[]       @relation("RaterRatings")
+  rated_ratings        rating[]       @relation("RatedRatings")
 }
 
 model group {
@@ -146,10 +148,17 @@ model notification {
 }
 
 model rating {
-  id         Int      @id @default(autoincrement())
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
-  user       user?    @relation(fields: [user_id], references: [id], onDelete: Cascade)
-  user_id    Int?
-  rating     Int
+  id            Int      @id @default(autoincrement())
+  rating        Float // 평점
+  rater_id      Int // 평점을 매기는 사람의 ID (현재 로그인한 사용자)
+  rated_user_id Int // 평점을 받는 대상자의 ID
+  created_at    DateTime @default(now())
+  updated_at    DateTime @updatedAt
+
+  rater      user  @relation("RaterRatings", fields: [rater_id], references: [id])
+  rated_user user  @relation("RatedRatings", fields: [rated_user_id], references: [id])
+  user       user? @relation(fields: [userId], references: [id])
+  userId     Int?
+
+  @@unique([rater_id, rated_user_id])
 }

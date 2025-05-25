@@ -26,12 +26,13 @@ const createUser = async (email, password) => {
 const deleteUser = async (userId) => {
   const user = await prisma.user.update({
     where: { id: userId },
-    data: { isDeleted: true },
+    data: { is_deleted: true },
   });
   return user;
 };
 
 const getUserInfo = async (userId) => {
+  console.log(userId);
   const user = await prisma.user.findUnique({
     where: { id: userId },
     select: {
@@ -42,9 +43,13 @@ const getUserInfo = async (userId) => {
       position: true,
       skills: true,
       group: true,
-      followers: true,
+      follower: true,
       following: true,
-      rating: true,
+      rated_ratings: {
+        select: {
+          rating: true,
+        },
+      },
       waiting_list: true,
       bookmark: true,
       reply: true,
@@ -56,7 +61,14 @@ const getUserInfo = async (userId) => {
     throw new Error('존재하지 않는 유저입니다.');
   }
 
-  return { items: user };
+  const ratings = user.rated_ratings.map((r) => r.rating);
+  const averageRating =
+    ratings.length > 0
+      ? Math.round((ratings.reduce((a, b) => a + b, 0) / ratings.length) * 10) /
+        10
+      : 0;
+
+  return { items: user, averageRating };
 };
 
 const editUserInfo = async (
@@ -146,8 +158,29 @@ const getUserByEmail = async (email) => {
 const getByUserId = async (userId) => {
   const user = await prisma.user.findUnique({
     where: { id: userId },
+    select: {
+      email: true,
+      nickname: true,
+      profile_image: true,
+      position: true,
+      skills: true,
+      follower: true,
+      following: true,
+      _count: true,
+      rated_ratings: {
+        select: {
+          rating: true,
+        },
+      },
+    },
   });
-  return user;
+  const ratings = user.rated_ratings.map((r) => r.rating);
+  const averageRating =
+    ratings.length > 0
+      ? Math.round((ratings.reduce((a, b) => a + b, 0) / ratings.length) * 10) /
+        10
+      : 0;
+  return { items: user, averageRating };
 };
 export default {
   createUser,
