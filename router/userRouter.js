@@ -313,6 +313,8 @@ router.post('/logout', userController.logout);
  */
 router.get('/info', jwtToken.accessVerifyToken, userController.userInfo);
 
+router.get('/my-group', jwtToken.accessVerifyToken, userController.getMyGroup);
+
 /**
  * @swagger
  * /api/v1/user/{userId}:

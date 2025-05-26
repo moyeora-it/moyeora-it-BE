@@ -22,6 +22,7 @@ const accessVerifyToken = async (req, res, next) => {
           id: springUserId,
           email: userData.email,
         };
+
         return next();
       }
     }

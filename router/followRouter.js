@@ -11,7 +11,7 @@ const router = express.Router();
  *     tags:
  *       - Follow
  *     summary: 팔로워 목록 조회
- *     description: 특정 사용자의 팔로워 목록을 조회합니다. size와 nextCursor 쿼리 파라미터로 페이징이 가능합니다.
+ *     description: 특정 사용자의 팔로워 목록을 조회합니다. size와 cursor 쿼리 파라미터로 페이징이 가능합니다.
  *     parameters:
  *       - in: path
  *         name: userId
@@ -27,7 +27,7 @@ const router = express.Router();
  *           default: 10
  *         description: 한 번에 조회할 팔로워 수 (기본값 10)
  *       - in: query
- *         name: nextCursor
+ *         name: cursor
  *         required: false
  *         schema:
  *           type: integer
@@ -55,7 +55,7 @@ const router = express.Router();
  *                       profileImage:
  *                         type: string
  *                         example: https://example.com/profile.jpg
- *                 nextCursor:
+ *                 cursor:
  *                   type: integer
  *                   example: 20
  *       400:
@@ -94,7 +94,7 @@ router.get('/:userId/followers', followController.getFollowers);
  *     tags:
  *       - Follow
  *     summary: 팔로잉 목록 조회
- *     description: 특정 사용자의 팔로잉 목록을 조회합니다. size와 nextCursor 쿼리 파라미터로 페이징이 가능합니다.
+ *     description: 특정 사용자의 팔로잉 목록을 조회합니다. size와 cursor 쿼리 파라미터로 페이징이 가능합니다.
  *     parameters:
  *       - in: path
  *         name: userId
@@ -110,7 +110,7 @@ router.get('/:userId/followers', followController.getFollowers);
  *           default: 10
  *         description: 한 번에 조회할 팔로잉 수 (기본값 10)
  *       - in: query
- *         name: nextCursor
+ *         name: cursor
  *         required: false
  *         schema:
  *           type: integer
@@ -138,7 +138,7 @@ router.get('/:userId/followers', followController.getFollowers);
  *                       profileImage:
  *                         type: string
  *                         example: https://example.com/profile.jpg
- *                 nextCursor:
+ *                 cursor:
  *                   type: integer
  *                   example: 20
  *       400:

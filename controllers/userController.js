@@ -139,6 +139,28 @@ const refreshAccessToken = async (req, res) => {
   }
 };
 
+const getMyGroup = async (req, res) => {
+  const { id: userId } = req.user;
+  const { sort, order, skill, position, type, status, size, cursor } =
+    req.query;
+  try {
+    const group = await userService.getMyGroup(
+      parseInt(userId),
+      sort || 'created_at',
+      order || 'desc',
+      skill,
+      position,
+      type,
+      status,
+      parseInt(size) || 10,
+      parseInt(cursor) || 0
+    );
+    res.status(200).json({ success: true, message: '그룹 조회 성공', group });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
 // const redisToLogin = async (req, res) => {
 //   const { email, password } = req.body;
 //   try {
@@ -159,4 +181,5 @@ export default {
   login,
   refreshAccessToken,
   logout,
+  getMyGroup,
 };
