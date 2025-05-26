@@ -1,9 +1,32 @@
 import dotenv from 'dotenv';
 import jwt from 'jsonwebtoken';
+import { client } from '../config/redis.js';
+
 dotenv.config();
 
-const accessVerifyToken = (req, res, next) => {
+const accessVerifyToken = async (req, res, next) => {
   try {
+    const authHeader = req.headers.authorization;
+    const springUserId = req.headers['x-user-id'];
+
+    if (authHeader && springUserId) {
+      const token = authHeader.split(' ')[1];
+
+      const userAuth = await client.get(`auth:${springUserId}`);
+      if (userAuth) {
+        const userData = JSON.parse(userAuth);
+        if (userData.accessToken !== token) {
+          return res.status(401).json({ message: '유효하지 않은 토큰입니다.' });
+        }
+        req.user = {
+          id: springUserId,
+          email: userData.email,
+        };
+        return next();
+      }
+    }
+
+    // Spring 토큰이 아닌 경우 Node 토큰 검증
     const cookieStr = req.headers.cookie;
     if (!cookieStr) {
       return res.status(401).json({ message: '토큰이 없습니다.' });
@@ -19,10 +42,10 @@ const accessVerifyToken = (req, res, next) => {
     }
 
     const token = accessTokenCookie.split('=')[1];
-
     const decoded = jwt.verify(token, process.env.TOKEN_SECRET);
+
     req.user = {
-      id: decoded.userId, // userController에서 사용하는 형식에 맞춤
+      id: decoded.userId,
       email: decoded.email,
     };
     next();
@@ -37,7 +60,7 @@ const accessVerifyToken = (req, res, next) => {
   }
 };
 
-const refreshVerifyToken = (req, res, next) => {
+const refreshVerifyToken = async (req, res, next) => {
   try {
     const cookieStr = req.headers.cookie;
     if (!cookieStr) {
@@ -55,7 +78,21 @@ const refreshVerifyToken = (req, res, next) => {
 
     const token = refreshTokenCookie.split('=')[1];
 
+    // JWT 토큰 검증
     const decoded = jwt.verify(token, process.env.TOKEN_SECRET);
+
+    // Spring에서 발급한 토큰인지 확인 (Redis에 저장된 토큰인지 확인)
+    const userAuth = await client.get(String(decoded.userId));
+
+    if (userAuth) {
+      // Redis에 데이터가 있다면 Spring 토큰 검증
+      const userData = JSON.parse(userAuth);
+      if (userData.refreshToken !== token) {
+        return res.status(401).json({ message: '유효하지 않은 토큰입니다.' });
+      }
+    }
+    // Redis에 데이터가 없다면 Node 토큰으로 간주하고 일반 검증 진행
+
     req.user = {
       id: decoded.userId,
       email: decoded.email,
