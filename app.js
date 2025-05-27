@@ -13,7 +13,7 @@ app.use('/api/v1/follow', followRouter);
 app.use('/api/v1/rating', ratingRouter);
 app.use('/api/v1/auth', authRouter);
 app.use(
-  '/api-docs',
+  '/api/v1/api-docs',
   swaggerUi.serve,
   swaggerUi.setup(swaggerSpec, { explorer: true })
 );
