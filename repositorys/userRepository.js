@@ -32,7 +32,6 @@ const deleteUser = async (userId) => {
 };
 
 const getUserInfo = async (userId) => {
-  console.log(userId);
   const user = await prisma.user.findUnique({
     where: { id: userId },
     select: {
@@ -182,6 +181,51 @@ const getByUserId = async (userId) => {
       : 0;
   return { items: user, averageRating };
 };
+
+const getMyGroup = async (
+  userId,
+  sort,
+  order,
+  skill,
+  position,
+  type,
+  status,
+  size,
+  cursor
+) => {
+  const where = {
+    users: {
+      some: {
+        id: userId,
+      },
+    },
+    ...(skill && { skills: { has: skill } }),
+    ...(position && { position }),
+    ...(type && { type }),
+    ...(status && { status }),
+  };
+
+  const queryOptions = {
+    where,
+    orderBy: {
+      [sort]: order,
+    },
+    take: size,
+    skip: cursor,
+  };
+
+  const group = await prisma.group.findMany(queryOptions);
+
+  const hasNext = group.length === size;
+  const nextCursor = hasNext ? cursor + size : null;
+
+  return {
+    items: group,
+    cursor: nextCursor,
+    hasNext,
+  };
+};
+
 export default {
   createUser,
   deleteUser,
@@ -192,4 +236,5 @@ export default {
   getUserByEmail,
   getByUserId,
   getUserByEmail,
+  getMyGroup,
 };

@@ -1,38 +1,38 @@
 import prisma from '../config/prisma.js';
 
-const getFollowers = async (userId, size, nextCursor) => {
+const getFollowers = async (userId, size, cursor) => {
   console.log(userId);
   const followers = await prisma.follow.findMany({
     where: { follower_id: userId },
     take: size,
-    skip: nextCursor,
+    skip: cursor,
   });
 
   const hasNext = followers.length === size;
-  const cursor = hasNext ? nextCursor + size : null;
+  const nextCursor = hasNext ? cursor + size : null;
 
   return {
     items: followers,
+    cursor: nextCursor,
     hasNext,
-    cursor,
     totalCount: followers.length,
   };
 };
 
-const getFollowing = async (userId, size, nextCursor) => {
+const getFollowing = async (userId, size, cursor) => {
   const following = await prisma.follow.findMany({
     where: { following_id: userId },
     take: size,
-    skip: nextCursor,
+    skip: cursor,
   });
 
   const hasNext = following.length === size;
-  const cursor = hasNext ? nextCursor + size : null;
+  const nextCursor = hasNext ? cursor + size : null;
 
   return {
     items: following,
     hasNext,
-    cursor,
+    cursor: nextCursor,
     totalCount: following.length,
   };
 };

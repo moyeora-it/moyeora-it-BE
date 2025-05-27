@@ -71,6 +71,31 @@ const getByUserId = async (userId) => {
   return user;
 };
 
+const getMyGroup = async (
+  userId,
+  sort,
+  order,
+  skill,
+  position,
+  type,
+  status,
+  size,
+  cursor
+) => {
+  const group = await userRepository.getMyGroup(
+    userId,
+    sort,
+    order,
+    skill,
+    position,
+    type,
+    status,
+    size,
+    cursor
+  );
+  return group;
+};
+
 export default {
   createUser,
   deleteUser,
@@ -81,4 +106,5 @@ export default {
   getUserByEmail,
   createAccessToken,
   getByUserId,
+  getMyGroup,
 };
