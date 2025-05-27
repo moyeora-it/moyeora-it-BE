@@ -14,7 +14,7 @@ jobs:
     # 응용해서 runs-on에 여러 OS에서 돌릴 수도 있다.
     strategy:
       matrix:
-        node-version: [20.x] 
+        node-version: [20.x]
 
     # uses 개념은 다른 사람이 작성한 내용을 실행하는 개념이다.
     # actions/checkout: GitHub의 마지막 커밋으로 Checkout 한다.
@@ -47,7 +47,7 @@ jobs:
       - name: Deploy
         uses: appleboy/ssh-action@master
         with:
-          host: ${{ secrets.EC2_SERVER_HOST }}
+          host: ${{ secrets.ADDRESS_IP }}
           username: ubuntu
           key: ${{ secrets.PRIVATE_KEY }}
           envs: GITHUB_SHA
