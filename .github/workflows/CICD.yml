@@ -48,7 +48,7 @@ jobs:
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.ADDRESS_IP }}
-          username: ubuntu
+          username: ${{ secrets.GCP_NAME }}
           key: ${{ secrets.PRIVATE_KEY }}
           envs: GITHUB_SHA
           script: |
