@@ -1,0 +1,164 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum position {
+  PM
+  PL
+  AA
+  TA
+  DA
+  QA
+  FE
+  BE
+  FS
+}
+
+enum skill {
+  Java
+  JavaScript
+  HTML_CSS
+  REACT
+  Vue
+  Kotlin
+  Spring
+}
+
+enum provider {
+  KAKAO
+  GOOGLE
+  NAVER
+}
+
+model user {
+  id                   Int            @id @default(autoincrement())
+  email                String?        @unique
+  password             String?
+  nickname             String?
+  profile_image        String?
+  provider             provider? // 소셜 로그인 종류
+  provider_id          String? // 해당 소셜 로그인의 고유 id
+  created_at           DateTime       @default(now())
+  updated_at           DateTime       @updatedAt
+  is_deleted           Boolean        @default(false)
+  position             position?
+  skills               skill[]
+  group                group[]
+  reply                reply[]
+  bookmark             bookmark[]
+  follower             follow[]       @relation("follower")
+  following            follow[]       @relation("following")
+  notification         notification[]
+  rating               rating[]
+  waiting_list         waiting_list[]
+  email_authentication Int?
+  rater_ratings        rating[]       @relation("RaterRatings")
+  rated_ratings        rating[]       @relation("RatedRatings")
+}
+
+model group {
+  id               Int            @id @default(autoincrement())
+  title            String
+  deadline         DateTime // 모임 모집 마감일
+  start_date       DateTime // 모임 시작일
+  content          String
+  end_date         DateTime // 모임 종료일
+  max_participants Int // 모임 최대 참여 인원
+  positions        position[]
+  first_user_id    Int? // 방장 유저 아이디
+  views            Int            @default(0)
+  skills           skill[]
+  type             String //study, project, all
+  status           Boolean        @default(true) // 모집 상태 기본값 True
+  auto_allow       Boolean
+  created_at       DateTime       @default(now())
+  updated_at       DateTime       @updatedAt
+  users            user[]
+  reply            reply[]
+  bookmark         bookmark[]
+  waiting_list     waiting_list[]
+}
+
+// 그룹 대기열 테이블
+model waiting_list {
+  id         Int      @id @default(autoincrement())
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  user       user?    @relation(fields: [user_id], references: [id])
+  user_id    Int?
+  group      group?   @relation(fields: [group_id], references: [id])
+  group_id   Int?
+  status     Boolean  @default(false) // 대기열 상태 기본값 False
+}
+
+model reply {
+  id         Int      @id @default(autoincrement())
+  content    String
+  parent_id  Int? // 대댓글 구분 용도
+  is_deleted Boolean  @default(false)
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  user       user?    @relation(fields: [user_id], references: [id])
+  user_id    Int?
+  group      group?   @relation(fields: [group_id], references: [id])
+  group_id   Int?
+}
+
+model bookmark {
+  id         Int      @id @default(autoincrement())
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  user       user?    @relation(fields: [user_id], references: [id])
+  user_id    Int?
+  group      group?   @relation(fields: [group_id], references: [id])
+  group_id   Int?
+}
+
+model follow {
+  id           Int      @id @default(autoincrement())
+  follower     user?    @relation("follower", fields: [follower_id], references: [id])
+  follower_id  Int?
+  following    user?    @relation("following", fields: [following_id], references: [id])
+  following_id Int?
+  created_at   DateTime @default(now())
+  updated_at   DateTime @updatedAt
+
+  @@unique([follower_id, following_id])
+}
+
+model notification {
+  id         Int      @id @default(autoincrement())
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  user       user?    @relation(fields: [user_id], references: [id])
+  content    String
+  user_id    Int?
+  read       Boolean
+}
+
+model rating {
+  id            Int      @id @default(autoincrement())
+  rating        Float // 평점
+  rater_id      Int // 평점을 매기는 사람의 ID (현재 로그인한 사용자)
+  rated_user_id Int // 평점을 받는 대상자의 ID
+  created_at    DateTime @default(now())
+  updated_at    DateTime @updatedAt
+
+  rater      user  @relation("RaterRatings", fields: [rater_id], references: [id])
+  rated_user user  @relation("RatedRatings", fields: [rated_user_id], references: [id])
+  user       user? @relation(fields: [userId], references: [id])
+  userId     Int?
+
+  @@unique([rater_id, rated_user_id])
+}
