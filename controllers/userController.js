@@ -1,5 +1,5 @@
 import userService from '../services/userService.js';
-import { sendEmailAuth } from '../config/SMTP.js';
+import { sendEmailAuth } from '../config/smtp.js';
 import {
   accessTokenOption,
   refreshTokenOption,
