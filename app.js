@@ -4,9 +4,19 @@ import followRouter from './router/followRouter.js';
 import ratingRouter from './router/ratingRouter.js';
 import { swaggerSpec, swaggerUi } from './swagger/swagger.js';
 import authRouter from './router/authRouter.js';
-
+import socket from './config/socket.js';
+import cors from 'cors';
+import http from 'http';
+import { Server } from 'socket.io';
 const app = express();
+const server = http.createServer(app);
 
+app.use(
+  cors({
+    origin: 'http://localhost:3000',
+    credentials: true,
+  })
+);
 app.use(express.json());
 app.use('/api/v1/user', userRouter);
 app.use('/api/v1/follow', followRouter);
@@ -17,6 +27,16 @@ app.use(
   swaggerUi.serve,
   swaggerUi.setup(swaggerSpec, { explorer: true })
 );
-app.listen(3001, () => {
-  console.log('Server is running on port 3001');
+
+const io = new Server(server, {
+  cors: {
+    origin: 'http://localhost:3000',
+    credentials: true,
+  },
+});
+
+socket(io);
+
+server.listen(3001, () => {
+  console.log(`🏇${app.get('port')}에서 서버가 실행중입니다!🚴🏻  `);
 });
