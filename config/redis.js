@@ -7,7 +7,7 @@ const client = createClient({
   // username: process.env.REDIS_NAME,
   // password: process.env.REDIS_SECRET,
   socket: {
-    host: '127.0.0.1',
+    host: '10.178.0.2',
     port: 6379,
   },
   // legacyMode: true,
