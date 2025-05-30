@@ -8,6 +8,7 @@ import socket from './config/socket.js';
 import cors from 'cors';
 import http from 'http';
 import { Server } from 'socket.io';
+
 const app = express();
 const server = http.createServer(app);
 

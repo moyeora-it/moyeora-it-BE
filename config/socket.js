@@ -24,18 +24,17 @@ export default function socket(socketIo) {
     // Message 추가
     socket.on('messageS', (message) => {
       console.log('받은 메시지:', message);
-      const targetSocketId = userSocketMap.get(message.recepient);
+      const targetSocketId = userSocketMap.get(message.targetUserId);
 
       if (targetSocketId) {
         console.log('메시지 전송 시도:', {
-          targetSocketId,
           message,
         });
         socketIo.to(targetSocketId).emit('messageC', message);
       } else {
         socket.emit('messageC', {
           sender: 'SYSTEM',
-          recepient: message.sender,
+          targetUserId: message.sender,
           data: '수신자를 찾을 수 없습니다.',
         });
       }
