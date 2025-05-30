@@ -57,4 +57,4 @@ jobs:
             docker tag ${{ secrets.DOCKER_HUB_REPO }}:${GITHUB_SHA::7} ${{ secrets.PROJECT_NAME }}
             docker stop ${{ secrets.PROJECT_NAME }}
             docker rm ${{ secrets.PROJECT_NAME }}
-            docker run -d --name ${{ secrets.PROJECT_NAME }} -p 3001:3001 ${{ secrets.PROJECT_NAME }}
+            docker run -d --name ${{ secrets.PROJECT_NAME }} -p 3001:3001 -e AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }} -e AWS_REGION=${{ secrets.AWS_REGION }} -e AWS_S3_BUCKET=${{ secrets.AWS_S3_BUCKET }} -e AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }} -e DATABASE_URL=${{ secrets.DATABASE_URL }} -e EMAIL_USER=${{ secrets.EMAIL_USER }} -e EMAIL_PASSWORD=${{ secrets.EMAIL_PASSWORD }} -e EMAIL_HOST=${{ secrets.EMAIL_HOST }} -e EMAIL_PORT=${{ secrets.EMAIL_PORT }} -e EMAIL_SECURE=${{ secrets.EMAIL_SECURE }} -e EMAIL_USER=${{ secrets.EMAIL_USER }} -e EMAIL_PASS=${{ secrets.EMAIL_PASS }} -e REDIS_HOST=${{ secrets.REDIS_HOST }} -e REDIS_PORT=${{ secrets.REDIS_PORT }} -e TOKEN_SECRET=${{ secrets.TOKEN_SECRET }} ${{ secrets.PROJECT_NAME }}
