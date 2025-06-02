@@ -8,7 +8,7 @@ const getFollowers = async (req, res) => {
       parseInt(userId),
       parseInt(size) || 10,
       parseInt(cursor) || 0,
-      name || ''
+      name || null
     );
     res.status(200).json({ status: { success: true }, items: followers });
   } catch (error) {
@@ -26,7 +26,7 @@ const getFollowing = async (req, res) => {
       parseInt(userId),
       parseInt(size) || 10,
       parseInt(cursor) || 0,
-      name || ''
+      name || null
     );
     res.status(200).json({ status: { success: true }, items: following });
   } catch (error) {

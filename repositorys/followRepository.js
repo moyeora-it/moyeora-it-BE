@@ -1,25 +1,30 @@
 import prisma from '../config/prisma.js';
 
 const getFollowers = async (userId, size, cursor, name) => {
-  const followTotalCount = await prisma.follow.count({
-    where: { follower_id: userId },
-  });
-  const followers = await prisma.follow.findMany({
-    where: {
-      follower_id: userId,
-      follower: {
-        user: {
-          nickname: { contains: name, mode: 'insensitive' },
-        },
+  // name이 null이면 검색 조건을 제외
+  const whereCondition = {
+    following_id: userId,
+    ...(name && {
+      following: {
+        nickname: { contains: name, mode: 'insensitive' },
       },
-    },
+    }),
+  };
+
+  const followTotalCount = await prisma.follow.count({
+    where: whereCondition,
+  });
+
+  const followers = await prisma.follow.findMany({
+    where: whereCondition,
     take: size,
     skip: cursor,
     include: {
-      follower: {
+      following: {
         select: {
           id: true,
           email: true,
+          nickname: true,
         },
       },
     },
@@ -37,20 +42,19 @@ const getFollowers = async (userId, size, cursor, name) => {
 };
 
 const getFollowing = async (userId, size, cursor, name) => {
+  const whereCondition = {
+    following_id: userId,
+    ...(name && {
+      following: {
+        nickname: { contains: name, mode: 'insensitive' },
+      },
+    }),
+  };
   const followTotalCount = await prisma.follow.count({
-    where: {
-      following_id: userId,
-    },
+    where: whereCondition,
   });
   const following = await prisma.follow.findMany({
-    where: {
-      following_id: userId,
-      following: {
-        user: {
-          nickname: { contains: name, mode: 'insensitive' },
-        },
-      },
-    },
+    where: whereCondition,
     take: size,
     skip: cursor,
     include: {
@@ -58,6 +62,7 @@ const getFollowing = async (userId, size, cursor, name) => {
         select: {
           id: true,
           email: true,
+          nickname: true,
         },
       },
     },
