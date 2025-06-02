@@ -31,7 +31,7 @@ const router = express.Router();
  *                 type: string
  *                 format: password
  *                 example: password123
- *                 description: 사용자 비밀번호
+ *                 description: 사용자 비밀번호 (8자 이상)
  *     responses:
  *       201:
  *         description: 회원가입 성공
@@ -40,12 +40,59 @@ const router = express.Router();
  *             schema:
  *               type: object
  *               properties:
- *                 success:
- *                   type: boolean
- *                   example: true
+ *                 status:
+ *                   type: object
+ *                   properties:
+ *                     success:
+ *                       type: boolean
+ *                       example: true
  *                 message:
  *                   type: string
  *                   example: 회원가입 성공
+ *       400:
+ *         description: 잘못된 요청
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: object
+ *                   properties:
+ *                     success:
+ *                       type: boolean
+ *                       example: false
+ *                     code:
+ *                       type: integer
+ *                       example: 400
+ *                     message:
+ *                       type: string
+ *                       example: 이메일과 비밀번호를 입력해주세요.
+ *                 message:
+ *                   type: string
+ *                   example: 회원가입 실패
+ *       409:
+ *         description: 이메일 중복
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: object
+ *                   properties:
+ *                     success:
+ *                       type: boolean
+ *                       example: false
+ *                     code:
+ *                       type: integer
+ *                       example: 409
+ *                     message:
+ *                       type: string
+ *                       example: 이미 존재하는 이메일 입니다.
+ *                 message:
+ *                   type: string
+ *                   example: 회원가입 실패
  *       500:
  *         description: 서버 에러
  *         content:
@@ -53,12 +100,21 @@ const router = express.Router();
  *             schema:
  *               type: object
  *               properties:
- *                 success:
- *                   type: boolean
- *                   example: false
+ *                 status:
+ *                   type: object
+ *                   properties:
+ *                     success:
+ *                       type: boolean
+ *                       example: false
+ *                     code:
+ *                       type: integer
+ *                       example: 500
+ *                     message:
+ *                       type: string
+ *                       example: 서버 에러가 발생했습니다.
  *                 message:
  *                   type: string
- *                   example: 에러 메시지
+ *                   example: 회원가입 실패
  */
 router.post('/signup', userController.signup); // 테스트완
 
@@ -92,12 +148,31 @@ router.post('/signup', userController.signup); // 테스트완
  *             schema:
  *               type: object
  *               properties:
- *                 success:
- *                   type: boolean
- *                   example: true
- *                 message:
- *                   type: string
- *                   example: 이메일 인증 메일 발송 성공
+ *                 status:
+ *                   type: object
+ *                   properties:
+ *                     success:
+ *                       type: boolean
+ *                       example: true
+ *       400:
+ *         description: 잘못된 요청
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: object
+ *                   properties:
+ *                     success:
+ *                       type: boolean
+ *                       example: false
+ *                     code:
+ *                       type: integer
+ *                       example: 400
+ *                     message:
+ *                       type: string
+ *                       example: 이메일을 입력해주세요.
  *       500:
  *         description: 서버 에러
  *         content:
@@ -105,12 +180,18 @@ router.post('/signup', userController.signup); // 테스트완
  *             schema:
  *               type: object
  *               properties:
- *                 success:
- *                   type: boolean
- *                   example: false
- *                 message:
- *                   type: string
- *                   example: 에러 메시지
+ *                 status:
+ *                   type: object
+ *                   properties:
+ *                     success:
+ *                       type: boolean
+ *                       example: false
+ *                     code:
+ *                       type: integer
+ *                       example: 500
+ *                     message:
+ *                       type: string
+ *                       example: 메일 전송에 실패하였습니다.
  */
 router.post('/email-auth', userController.FindEmailAuth);
 
@@ -150,15 +231,39 @@ router.post('/email-auth', userController.FindEmailAuth);
  *             schema:
  *               type: object
  *               properties:
- *                 success:
- *                   type: boolean
- *                   example: true
+ *                 status:
+ *                   type: object
+ *                   properties:
+ *                     success:
+ *                       type: boolean
+ *                       example: true
  *                 message:
  *                   type: string
  *                   example: 로그인 성공
- *                 user:
+ *         headers:
+ *           Set-Cookie:
+ *             schema:
+ *               type: string
+ *               example: accessToken=eyJhbGciOiJIUzI1NiIs...; HttpOnly; Secure; SameSite=Strict
+ *       401:
+ *         description: 인증 실패
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
  *                   type: object
- *                   description: 사용자 정보
+ *                   properties:
+ *                     success:
+ *                       type: boolean
+ *                       example: false
+ *                     code:
+ *                       type: integer
+ *                       example: 401
+ *                     message:
+ *                       type: string
+ *                       example: 존재하지 않는 이메일입니다.
  *       500:
  *         description: 서버 에러
  *         content:
@@ -166,15 +271,20 @@ router.post('/email-auth', userController.FindEmailAuth);
  *             schema:
  *               type: object
  *               properties:
- *                 success:
- *                   type: boolean
- *                   example: false
- *                 message:
- *                   type: string
- *                   example: 에러 메시지
+ *                 status:
+ *                   type: object
+ *                   properties:
+ *                     success:
+ *                       type: boolean
+ *                       example: false
+ *                     code:
+ *                       type: integer
+ *                       example: 500
+ *                     message:
+ *                       type: string
+ *                       example: 서버 에러가 발생했습니다.
  */
 router.post('/login', userController.login);
-
 /**
  * @swagger
  * /api/v1/user/check-email-auth:
@@ -210,12 +320,50 @@ router.post('/login', userController.login);
  *             schema:
  *               type: object
  *               properties:
- *                 success:
- *                   type: boolean
- *                   example: true
- *                 message:
- *                   type: string
- *                   example: 이메일 인증 성공
+ *                 status:
+ *                   type: object
+ *                   properties:
+ *                     success:
+ *                       type: boolean
+ *                       example: true
+ *       400:
+ *         description: 잘못된 요청
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: object
+ *                   properties:
+ *                     success:
+ *                       type: boolean
+ *                       example: false
+ *                     code:
+ *                       type: integer
+ *                       example: 400
+ *                     message:
+ *                       type: string
+ *                       example: 이메일과 인증번호를 입력해주세요.
+ *       401:
+ *         description: 인증 실패
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: object
+ *                   properties:
+ *                     success:
+ *                       type: boolean
+ *                       example: false
+ *                     code:
+ *                       type: integer
+ *                       example: 401
+ *                     message:
+ *                       type: string
+ *                       example: 인증번호가 일치하지 않습니다.
  *       500:
  *         description: 서버 에러
  *         content:
@@ -223,12 +371,18 @@ router.post('/login', userController.login);
  *             schema:
  *               type: object
  *               properties:
- *                 success:
- *                   type: boolean
- *                   example: false
- *                 message:
- *                   type: string
- *                   example: 에러 메시지
+ *                 status:
+ *                   type: object
+ *                   properties:
+ *                     success:
+ *                       type: boolean
+ *                       example: false
+ *                     code:
+ *                       type: integer
+ *                       example: 500
+ *                     message:
+ *                       type: string
+ *                       example: 서버 에러가 발생했습니다.
  */
 router.post('/check-email-auth', userController.checkEmailAuth);
 
@@ -291,12 +445,77 @@ router.post('/logout', userController.logout);
  *                 success:
  *                   type: boolean
  *                   example: true
- *                 message:
- *                   type: string
- *                   example: 유저 정보 조회 성공
- *                 items:
+ *                 data:
  *                   type: object
- *                   description: 유저 정보 객체
+ *                   properties:
+ *                     items:
+ *                       type: object
+ *                       properties:
+ *                         id:
+ *                           type: integer
+ *                           example: 1
+ *                         email:
+ *                           type: string
+ *                           example: "user@example.com"
+ *                         nickname:
+ *                           type: string
+ *                           example: "홍길동"
+ *                         profile_image:
+ *                           type: string
+ *                           example: "https://example.com/profile.jpg"
+ *                         position:
+ *                           type: string
+ *                           example: "프론트엔드 개발자"
+ *                         skills:
+ *                           type: array
+ *                           items:
+ *                             type: string
+ *                           example: ["JavaScript", "React", "TypeScript"]
+ *                         group:
+ *                           type: string
+ *                           example: "개발팀"
+ *                         follower:
+ *                           type: array
+ *                           items:
+ *                             type: object
+ *                         following:
+ *                           type: array
+ *                           items:
+ *                             type: object
+ *                         waiting_list:
+ *                           type: array
+ *                           items:
+ *                             type: object
+ *                         bookmark:
+ *                           type: array
+ *                           items:
+ *                             type: object
+ *                         reply:
+ *                           type: array
+ *                           items:
+ *                             type: object
+ *                         _count:
+ *                           type: object
+ *                           properties:
+ *                             follower:
+ *                               type: integer
+ *                               example: 10
+ *                             following:
+ *                               type: integer
+ *                               example: 5
+ *                             waiting_list:
+ *                               type: integer
+ *                               example: 2
+ *                             bookmark:
+ *                               type: integer
+ *                               example: 3
+ *                             reply:
+ *                               type: integer
+ *                               example: 8
+ *                     averageRating:
+ *                       type: number
+ *                       format: float
+ *                       example: 4.5
  *       500:
  *         description: 서버 에러
  *         content:
@@ -309,7 +528,7 @@ router.post('/logout', userController.logout);
  *                   example: false
  *                 message:
  *                   type: string
- *                   example: 에러 메시지
+ *                   example: "서버 에러가 발생했습니다."
  */
 router.get('/info', jwtToken.accessVerifyToken, userController.userInfo);
 
@@ -341,12 +560,51 @@ router.get('/my-group', jwtToken.accessVerifyToken, userController.getMyGroup);
  *                 success:
  *                   type: boolean
  *                   example: true
- *                 message:
- *                   type: string
- *                   example: 유저 정보 조회 성공
- *                 items:
+ *                 data:
  *                   type: object
- *                   description: 유저 정보 객체
+ *                   properties:
+ *                     email:
+ *                       type: string
+ *                       example: "user@example.com"
+ *                     nickname:
+ *                       type: string
+ *                       example: "홍길동"
+ *                     profile_image:
+ *                       type: string
+ *                       example: "https://example.com/profile.jpg"
+ *                     position:
+ *                       type: string
+ *                       example: "프론트엔드 개발자"
+ *                     skills:
+ *                       type: array
+ *                       items:
+ *                         type: string
+ *                       example: ["JavaScript", "React", "TypeScript"]
+ *                     follower:
+ *                       type: array
+ *                       items:
+ *                         type: object
+ *                     following:
+ *                       type: array
+ *                       items:
+ *                         type: object
+ *                     _count:
+ *                       type: object
+ *                       properties:
+ *                         follower:
+ *                           type: integer
+ *                           example: 10
+ *                         following:
+ *                           type: integer
+ *                           example: 5
+ *                     rated_ratings:
+ *                       type: array
+ *                       items:
+ *                         type: object
+ *                         properties:
+ *                           rating:
+ *                             type: number
+ *                             example: 4.5
  *       500:
  *         description: 서버 에러
  *         content:
@@ -359,7 +617,7 @@ router.get('/my-group', jwtToken.accessVerifyToken, userController.getMyGroup);
  *                   example: false
  *                 message:
  *                   type: string
- *                   example: 에러 메시지
+ *                   example: "서버 에러가 발생했습니다."
  */
 router.get('/:userId', userController.getByUserId);
 
@@ -381,12 +639,31 @@ router.get('/:userId', userController.getByUserId);
  *             schema:
  *               type: object
  *               properties:
- *                 success:
- *                   type: boolean
- *                   example: true
- *                 message:
- *                   type: string
- *                   example: 회원 탈퇴 성공
+ *                 status:
+ *                   type: object
+ *                   properties:
+ *                     success:
+ *                       type: boolean
+ *                       example: true
+ *       401:
+ *         description: 인증 실패
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: object
+ *                   properties:
+ *                     success:
+ *                       type: boolean
+ *                       example: false
+ *                     code:
+ *                       type: integer
+ *                       example: 401
+ *                     message:
+ *                       type: string
+ *                       example: 인증에 실패했습니다.
  *       500:
  *         description: 서버 에러
  *         content:
@@ -394,12 +671,18 @@ router.get('/:userId', userController.getByUserId);
  *             schema:
  *               type: object
  *               properties:
- *                 success:
- *                   type: boolean
- *                   example: false
- *                 message:
- *                   type: string
- *                   example: 에러 메시지
+ *                 status:
+ *                   type: object
+ *                   properties:
+ *                     success:
+ *                       type: boolean
+ *                       example: false
+ *                     code:
+ *                       type: integer
+ *                       example: 500
+ *                     message:
+ *                       type: string
+ *                       example: 서버 에러가 발생했습니다.
  */
 router.delete('/delete', jwtToken.accessVerifyToken, userController.deleteUser);
 
@@ -438,10 +721,12 @@ router.delete('/delete', jwtToken.accessVerifyToken, userController.deleteUser);
  *                 description: 쉼표(,)로 구분된 기술 스택 문자열
  *               newPassword:
  *                 type: string
+ *                 format: password
  *                 example: newpassword123
  *                 description: 새 비밀번호(변경 시)
  *               confirmPassword:
  *                 type: string
+ *                 format: password
  *                 example: newpassword123
  *                 description: 새 비밀번호 확인(변경 시)
  *     responses:
@@ -452,12 +737,50 @@ router.delete('/delete', jwtToken.accessVerifyToken, userController.deleteUser);
  *             schema:
  *               type: object
  *               properties:
- *                 success:
- *                   type: boolean
- *                   example: true
- *                 message:
- *                   type: string
- *                   example: 유저 정보 수정 성공
+ *                 status:
+ *                   type: object
+ *                   properties:
+ *                     success:
+ *                       type: boolean
+ *                       example: true
+ *       400:
+ *         description: 잘못된 요청
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: object
+ *                   properties:
+ *                     success:
+ *                       type: boolean
+ *                       example: false
+ *                     code:
+ *                       type: integer
+ *                       example: 400
+ *                     message:
+ *                       type: string
+ *                       example: 비밀번호가 일치하지 않습니다.
+ *       401:
+ *         description: 인증 실패
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: object
+ *                   properties:
+ *                     success:
+ *                       type: boolean
+ *                       example: false
+ *                     code:
+ *                       type: integer
+ *                       example: 401
+ *                     message:
+ *                       type: string
+ *                       example: 인증에 실패했습니다.
  *       500:
  *         description: 서버 에러
  *         content:
@@ -465,12 +788,18 @@ router.delete('/delete', jwtToken.accessVerifyToken, userController.deleteUser);
  *             schema:
  *               type: object
  *               properties:
- *                 success:
- *                   type: boolean
- *                   example: false
- *                 message:
- *                   type: string
- *                   example: 에러 메시지
+ *                 status:
+ *                   type: object
+ *                   properties:
+ *                     success:
+ *                       type: boolean
+ *                       example: false
+ *                     code:
+ *                       type: integer
+ *                       example: 500
+ *                     message:
+ *                       type: string
+ *                       example: 서버 에러가 발생했습니다.
  */
 router.patch(
   '/edit',
@@ -544,20 +873,46 @@ router.post(
  *                 type: string
  *                 format: email
  *                 example: "user@example.com"
+ *                 description: 중복 체크할 이메일 주소
  *     responses:
  *       200:
- *         description: 이메일 중복 체크 결과
+ *         description: 이메일 중복되지 않음
  *         content:
  *           application/json:
  *             schema:
  *               type: object
  *               properties:
- *                 success:
- *                   type: boolean
- *                   example: true
- *                 message:
- *                   type: string
- *                   example: "이메일이 중복되지 않습니다."
+ *                 status:
+ *                   type: object
+ *                   properties:
+ *                     success:
+ *                       type: boolean
+ *                       example: true
+ *                     code:
+ *                       type: integer
+ *                       example: 200
+ *                     message:
+ *                       type: string
+ *                       example: "이메일이 중복되지 않습니다."
+ *       409:
+ *         description: 이메일 중복
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: object
+ *                   properties:
+ *                     success:
+ *                       type: boolean
+ *                       example: false
+ *                     code:
+ *                       type: integer
+ *                       example: 409
+ *                     message:
+ *                       type: string
+ *                       example: "이메일이 중복됩니다."
  *       500:
  *         description: 서버 에러
  *         content:
@@ -565,12 +920,18 @@ router.post(
  *             schema:
  *               type: object
  *               properties:
- *                 success:
- *                   type: boolean
- *                   example: false
- *                 message:
- *                   type: string
- *                   example: "서버 에러가 발생했습니다."
+ *                 status:
+ *                   type: object
+ *                   properties:
+ *                     success:
+ *                       type: boolean
+ *                       example: false
+ *                     code:
+ *                       type: integer
+ *                       example: 500
+ *                     message:
+ *                       type: string
+ *                       example: "서버 에러가 발생했습니다."
  */
 router.post('/check-email', userController.checkEmail);
 
