@@ -1,11 +1,20 @@
 import followRepository from '../repositorys/followRepository.js';
+import userRepository from '../repositorys/userRepository.js';
 
 const getFollowers = async (userId, size, cursor) => {
+  const user = await userRepository.getByUserId(userId);
+  if (!user) {
+    throw new Error('사용자를 찾을 수 없습니다.');
+  }
   const followers = await followRepository.getFollowers(userId, size, cursor);
   return followers;
 };
 
 const getFollowing = async (userId, size, cursor) => {
+  const user = await userRepository.getByUserId(userId);
+  if (!user) {
+    throw new Error('사용자를 찾을 수 없습니다.');
+  }
   const following = await followRepository.getFollowing(userId, size, cursor);
   return following;
 };
