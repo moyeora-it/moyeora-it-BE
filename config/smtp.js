@@ -25,7 +25,8 @@ export const sendEmailAuth = async (email, newPassword) => {
     from: process.env.EMAIL_USER,
     to: email,
     subject: '임시 비밀번호 입니다.',
-    html: `<h1>임시 비밀번호 입니다. \n\n\n\n\n\n</h1> ${newPassword}`,
+    html: `<h1>임시 비밀번호 입니다. \n\n\n\n\n\n</h1> ${newPassword}
+    <a href="http://localhost:3000/login" style="background-color: #007bff; color: white; padding: 10px 20px; border-radius: 5px; text-decoration: none;">로그인</a>`,
   };
 
   return new Promise((resolve, reject) => {
