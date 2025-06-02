@@ -523,4 +523,55 @@ router.post(
   userController.refreshAccessToken
 );
 
+/**
+ * @swagger
+ * /api/v1/user/check-email:
+ *   post:
+ *     tags:
+ *       - User
+ *     summary: 이메일 중복 체크
+ *     description: 회원가입 시 이메일 중복 여부를 확인합니다.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - email
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 format: email
+ *                 example: "user@example.com"
+ *     responses:
+ *       200:
+ *         description: 이메일 중복 체크 결과
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: "이메일이 중복되지 않습니다."
+ *       500:
+ *         description: 서버 에러
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "서버 에러가 발생했습니다."
+ */
+router.post('/check-email', userController.checkEmail);
+
 export default router;

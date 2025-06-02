@@ -96,6 +96,11 @@ const getMyGroup = async (
   return group;
 };
 
+const checkEmail = async (email) => {
+  const user = await userRepository.checkEmail(email);
+  return user;
+};
+
 export default {
   createUser,
   deleteUser,
@@ -107,4 +112,5 @@ export default {
   createAccessToken,
   getByUserId,
   getMyGroup,
+  checkEmail,
 };
