@@ -8,7 +8,9 @@ const getFollowers = async (userId, size, cursor, name) => {
     where: {
       follower_id: userId,
       follower: {
-        nickname: { contains: name, mode: 'insensitive' },
+        user: {
+          nickname: { contains: name, mode: 'insensitive' },
+        },
       },
     },
     take: size,
@@ -38,16 +40,15 @@ const getFollowing = async (userId, size, cursor, name) => {
   const followTotalCount = await prisma.follow.count({
     where: {
       following_id: userId,
-      following: {
-        nickname: { contains: name, mode: 'insensitive' },
-      },
     },
   });
   const following = await prisma.follow.findMany({
     where: {
       following_id: userId,
       following: {
-        nickname: { contains: name, mode: 'insensitive' },
+        user: {
+          nickname: { contains: name, mode: 'insensitive' },
+        },
       },
     },
     take: size,
