@@ -161,6 +161,22 @@ const getMyGroup = async (req, res) => {
   }
 };
 
+const checkEmail = async (req, res) => {
+  const { email } = req.body;
+  try {
+    const user = await userService.checkEmail(email);
+    if (user) {
+      res.status(200).json({ success: false, message: '이메일이 중복됩니다.' });
+    } else {
+      res
+        .status(200)
+        .json({ success: true, message: '이메일이 중복되지 않습니다.' });
+    }
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
 // const redisToLogin = async (req, res) => {
 //   const { email, password } = req.body;
 //   try {
@@ -182,4 +198,5 @@ export default {
   refreshAccessToken,
   logout,
   getMyGroup,
+  checkEmail,
 };

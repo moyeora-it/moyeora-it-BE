@@ -226,6 +226,13 @@ const getMyGroup = async (
   };
 };
 
+const checkEmail = async (email) => {
+  const user = await prisma.user.findUnique({
+    where: { email },
+  });
+  return user;
+};
+
 export default {
   createUser,
   deleteUser,
@@ -237,4 +244,5 @@ export default {
   getByUserId,
   getUserByEmail,
   getMyGroup,
+  checkEmail,
 };
