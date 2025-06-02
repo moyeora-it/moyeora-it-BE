@@ -29,14 +29,10 @@ const handleSpringAuth = async (req, res) => {
       sameSite: 'strict',
     });
 
-    return res.status(200).json({
-      success: true,
-      message: '인증 정보 저장 성공',
-    });
+    return res.status(200).json({ status: { success: true } });
   } catch (error) {
     return res.status(500).json({
-      success: false,
-      message: error.message,
+      status: { success: false, code: 500, message: error.message },
     });
   }
 };

@@ -43,18 +43,41 @@ const router = express.Router();
  *             schema:
  *               type: object
  *               properties:
- *                 success:
- *                   type: boolean
- *                   example: true
- *                 message:
- *                   type: string
- *                   example: 인증 정보 저장 성공
+ *                 status:
+ *                   type: object
+ *                   properties:
+ *                     success:
+ *                       type: boolean
+ *                       example: true
  *         headers:
  *           Set-Cookie:
  *             schema:
- *               type: string
+ *               type: array
+ *               items:
+ *                 type: string
  *               description: JWT 토큰이 쿠키에 저장됩니다.
- *               example: accessToken=xxx; HttpOnly; Secure; SameSite=Strict
+ *               example:
+ *                 - "accessToken=xxx; HttpOnly; Secure; SameSite=Strict"
+ *                 - "refreshToken=xxx; HttpOnly; Secure; SameSite=Strict"
+ *       400:
+ *         description: 잘못된 요청
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: object
+ *                   properties:
+ *                     success:
+ *                       type: boolean
+ *                       example: false
+ *                     code:
+ *                       type: integer
+ *                       example: 400
+ *                     message:
+ *                       type: string
+ *                       example: "필수 파라미터가 누락되었습니다."
  *       500:
  *         description: 서버 에러
  *         content:
@@ -62,12 +85,18 @@ const router = express.Router();
  *             schema:
  *               type: object
  *               properties:
- *                 success:
- *                   type: boolean
- *                   example: false
- *                 message:
- *                   type: string
- *                   example: 에러 메시지
+ *                 status:
+ *                   type: object
+ *                   properties:
+ *                     success:
+ *                       type: boolean
+ *                       example: false
+ *                     code:
+ *                       type: integer
+ *                       example: 500
+ *                     message:
+ *                       type: string
+ *                       example: "서버 에러가 발생했습니다."
  */
 router.post('/spring-auth', authController.handleSpringAuth);
 

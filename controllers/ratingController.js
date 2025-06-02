@@ -6,15 +6,25 @@ const createRating = async (req, res) => {
 
   try {
     if (typeof rate !== 'number' || isNaN(rate)) {
-      return res.status(400).json({ message: '유효하지 않은 평점입니다.' });
+      return res.status(400).json({
+        status: {
+          success: false,
+          code: 400,
+          message: '유효하지 않은 평점입니다.',
+        },
+      });
     }
 
     const roundedRate = Math.round(rate * 10) / 10;
 
     if (roundedRate < 0 || roundedRate > 5) {
-      return res
-        .status(400)
-        .json({ message: '평점은 0.0부터 5.0 사이여야 합니다.' });
+      return res.status(400).json({
+        status: {
+          success: false,
+          code: 400,
+          message: '평점은 0.0부터 5.0 사이여야 합니다.',
+        },
+      });
     }
 
     const rating = await ratingService.createRating(
@@ -22,9 +32,11 @@ const createRating = async (req, res) => {
       roundedRate,
       parseInt(userId)
     );
-    res.status(201).json({ success: true, message: '평점 남기기 성공' });
+    res.status(201).json({ status: { success: true } });
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
+    res.status(500).json({
+      status: { success: false, code: 500, message: error.message },
+    });
   }
 };
 
@@ -35,7 +47,13 @@ const editRating = async (req, res) => {
 
   try {
     if (typeof rate !== 'number' || isNaN(rate)) {
-      return res.status(400).json({ message: '유효하지 않은 평점입니다.' });
+      return res.status(400).json({
+        status: {
+          success: false,
+          code: 400,
+          message: '유효하지 않은 평점입니다.',
+        },
+      });
     }
 
     const roundedRate = Math.round(rate * 10) / 10;
@@ -44,9 +62,11 @@ const editRating = async (req, res) => {
       roundedRate,
       parseInt(userId)
     );
-    res.status(200).json({ success: true, message: '평점 수정 성공' });
+    res.status(200).json({ status: { success: true } });
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
+    res.status(500).json({
+      status: { success: false, code: 500, message: error.message },
+    });
   }
 };
 
@@ -55,11 +75,11 @@ const getRating = async (req, res) => {
 
   try {
     const rating = await ratingService.getRating(parseInt(ratedUserId));
-    res
-      .status(200)
-      .json({ success: true, message: '평점 조회 성공', items: rating });
+    res.status(200).json({ status: { success: true }, items: rating });
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
+    res.status(500).json({
+      status: { success: false, code: 500, message: error.message },
+    });
   }
 };
 
@@ -68,9 +88,11 @@ const deleteRating = async (req, res) => {
 
   try {
     await ratingService.deleteRating(parseInt(userId));
-    res.status(200).json({ success: true, message: '평점 삭제 성공' });
+    res.status(204).json({ status: { success: true } });
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
+    res.status(500).json({
+      status: { success: false, code: 500, message: error.message },
+    });
   }
 };
 

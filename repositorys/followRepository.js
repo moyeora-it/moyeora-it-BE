@@ -1,10 +1,26 @@
 import prisma from '../config/prisma.js';
 
-const getFollowers = async (userId, size, cursor) => {
-  const followers = await prisma.follow.findMany({
+const getFollowers = async (userId, size, cursor, name) => {
+  const followTotalCount = await prisma.follow.count({
     where: { follower_id: userId },
+  });
+  const followers = await prisma.follow.findMany({
+    where: {
+      follower_id: userId,
+      follower: {
+        nickname: { contains: name, mode: 'insensitive' },
+      },
+    },
     take: size,
     skip: cursor,
+    include: {
+      follower: {
+        select: {
+          id: true,
+          email: true,
+        },
+      },
+    },
   });
 
   const hasNext = followers.length === size;
@@ -14,15 +30,36 @@ const getFollowers = async (userId, size, cursor) => {
     items: followers,
     cursor: nextCursor,
     hasNext,
-    totalCount: followers.length,
+    totalCount: followTotalCount,
   };
 };
 
-const getFollowing = async (userId, size, cursor) => {
+const getFollowing = async (userId, size, cursor, name) => {
+  const followTotalCount = await prisma.follow.count({
+    where: {
+      following_id: userId,
+      following: {
+        nickname: { contains: name, mode: 'insensitive' },
+      },
+    },
+  });
   const following = await prisma.follow.findMany({
-    where: { following_id: userId },
+    where: {
+      following_id: userId,
+      following: {
+        nickname: { contains: name, mode: 'insensitive' },
+      },
+    },
     take: size,
     skip: cursor,
+    include: {
+      following: {
+        select: {
+          id: true,
+          email: true,
+        },
+      },
+    },
   });
 
   const hasNext = following.length === size;
@@ -32,7 +69,7 @@ const getFollowing = async (userId, size, cursor) => {
     items: following,
     hasNext,
     cursor: nextCursor,
-    totalCount: following.length,
+    totalCount: followTotalCount,
   };
 };
 
