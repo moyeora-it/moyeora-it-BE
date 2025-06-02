@@ -10,7 +10,7 @@ const getFollowers = async (req, res) => {
       parseInt(cursor) || 0,
       name || null
     );
-    res.status(200).json({ status: { success: true }, items: followers });
+    res.status(200).json({ status: { success: true }, ...followers });
   } catch (error) {
     res.status(500).json({
       status: { success: false, code: 500, message: error.message },
@@ -28,7 +28,7 @@ const getFollowing = async (req, res) => {
       parseInt(cursor) || 0,
       name || null
     );
-    res.status(200).json({ status: { success: true }, items: following });
+    res.status(200).json({ status: { success: true }, ...following });
   } catch (error) {
     res.status(500).json({
       status: { success: false, code: 500, message: error.message },
@@ -87,10 +87,41 @@ const deleteFollower = async (req, res) => {
     });
   }
 };
+
+const getFollowersCount = async (req, res) => {
+  const { userId } = req.params;
+  try {
+    const followersCount = await followService.getFollowersCount(
+      parseInt(userId)
+    );
+    res.status(200).json({ status: { success: true }, count: followersCount });
+  } catch (error) {
+    res.status(500).json({
+      status: { success: false, code: 500, message: error.message },
+    });
+  }
+};
+
+const getFollowingCount = async (req, res) => {
+  const { userId } = req.params;
+  try {
+    const followingCount = await followService.getFollowingCount(
+      parseInt(userId)
+    );
+    res.status(200).json({ status: { success: true }, count: followingCount });
+  } catch (error) {
+    res.status(500).json({
+      status: { success: false, code: 500, message: error.message },
+    });
+  }
+};
+
 export default {
   getFollowers,
   getFollowing,
   createFollow,
   deleteFollow,
   deleteFollower,
+  getFollowersCount,
+  getFollowingCount,
 };
