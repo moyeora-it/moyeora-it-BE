@@ -1,7 +1,6 @@
 import prisma from '../config/prisma.js';
 
 const getFollowers = async (userId, size, cursor) => {
-  console.log(userId);
   const followers = await prisma.follow.findMany({
     where: { follower_id: userId },
     take: size,
