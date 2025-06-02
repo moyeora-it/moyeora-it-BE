@@ -3,25 +3,31 @@ import followService from '../services/followService.js';
 const getFollowers = async (req, res) => {
   const { userId } = req.params;
   const { size, cursor } = req.query;
-
-  const followers = await followService.getFollowers(
-    parseInt(userId),
-    parseInt(size) || 10,
-    parseInt(cursor) || 0
-  );
-  res.status(200).json(followers);
+  try {
+    const followers = await followService.getFollowers(
+      parseInt(userId),
+      parseInt(size) || 10,
+      parseInt(cursor) || 0
+    );
+    res.status(200).json({ success: true, ...followers });
+  } catch (error) {
+    res.status(400).json({ success: false, message: error.message });
+  }
 };
 
 const getFollowing = async (req, res) => {
   const { userId } = req.params;
   const { size, cursor } = req.query;
-
-  const following = await followService.getFollowing(
-    parseInt(userId),
-    parseInt(size) || 10,
-    parseInt(cursor) || 0
-  );
-  res.status(200).json(following);
+  try {
+    const following = await followService.getFollowing(
+      parseInt(userId),
+      parseInt(size) || 10,
+      parseInt(cursor) || 0
+    );
+    res.status(200).json({ success: true, ...following });
+  } catch (error) {
+    res.status(400).json({ success: false, message: error.message });
+  }
 };
 
 const createFollow = async (req, res) => {
