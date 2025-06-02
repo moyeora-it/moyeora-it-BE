@@ -1,6 +1,6 @@
 import prisma from '../config/prisma.js';
 import bcrypt from 'bcrypt';
-import { sendEmailAuth } from '../config/SMTP.js';
+import { sendEmailAuth } from '../config/smtp.js';
 
 const createUser = async (email, password) => {
   if (!email || !password) {
@@ -243,11 +243,12 @@ const resetPassword = async (email) => {
   }
   const newPassword = Math.random().toString(36).substring(2, 15);
   const hashedPassword = await bcrypt.hash(newPassword, 10);
+  await sendEmailAuth(email, newPassword);
   await prisma.user.update({
     where: { email },
     data: { password: hashedPassword },
   });
-  await sendEmailAuth(email, newPassword);
+
   return;
 };
 
