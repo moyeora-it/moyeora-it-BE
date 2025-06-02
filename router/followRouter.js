@@ -618,4 +618,196 @@ router.delete(
   followController.deleteFollower
 );
 
+/**
+ * @swagger
+ * /api/v1/follow/{userId}/followers/count:
+ *   get:
+ *     tags:
+ *       - Follow
+ *     summary: 팔로워 수 조회
+ *     description: 특정 사용자의 팔로워 수를 조회합니다.
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: userId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *           example: 1
+ *         description: 팔로워 수를 조회할 대상 사용자의 ID
+ *     responses:
+ *       200:
+ *         description: 팔로워 수 조회 성공
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: object
+ *                   properties:
+ *                     success:
+ *                       type: boolean
+ *                       example: true
+ *                 count:
+ *                   type: integer
+ *                   example: 15
+ *                   description: 팔로워 수
+ *       401:
+ *         description: 인증 실패
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: object
+ *                   properties:
+ *                     success:
+ *                       type: boolean
+ *                       example: false
+ *                     code:
+ *                       type: integer
+ *                       example: 401
+ *                     message:
+ *                       type: string
+ *                       example: "인증에 실패했습니다."
+ *       404:
+ *         description: 사용자를 찾을 수 없음
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: object
+ *                   properties:
+ *                     success:
+ *                       type: boolean
+ *                       example: false
+ *                     code:
+ *                       type: integer
+ *                       example: 404
+ *                     message:
+ *                       type: string
+ *                       example: "사용자를 찾을 수 없습니다."
+ *       500:
+ *         description: 서버 에러
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: object
+ *                   properties:
+ *                     success:
+ *                       type: boolean
+ *                       example: false
+ *                     code:
+ *                       type: integer
+ *                       example: 500
+ *                     message:
+ *                       type: string
+ *                       example: "서버 에러가 발생했습니다."
+ */
+router.get('/:userId/followers/count', followController.getFollowersCount);
+
+/**
+ * @swagger
+ * /api/v1/follow/{userId}/following/count:
+ *   get:
+ *     tags:
+ *       - Follow
+ *     summary: 팔로잉 수 조회
+ *     description: 특정 사용자의 팔로잉 수를 조회합니다.
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: userId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *           example: 1
+ *         description: 팔로잉 수를 조회할 대상 사용자의 ID
+ *     responses:
+ *       200:
+ *         description: 팔로잉 수 조회 성공
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: object
+ *                   properties:
+ *                     success:
+ *                       type: boolean
+ *                       example: true
+ *                 count:
+ *                   type: integer
+ *                   example: 20
+ *                   description: 팔로잉 수
+ *       401:
+ *         description: 인증 실패
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: object
+ *                   properties:
+ *                     success:
+ *                       type: boolean
+ *                       example: false
+ *                     code:
+ *                       type: integer
+ *                       example: 401
+ *                     message:
+ *                       type: string
+ *                       example: "인증에 실패했습니다."
+ *       404:
+ *         description: 사용자를 찾을 수 없음
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: object
+ *                   properties:
+ *                     success:
+ *                       type: boolean
+ *                       example: false
+ *                     code:
+ *                       type: integer
+ *                       example: 404
+ *                     message:
+ *                       type: string
+ *                       example: "사용자를 찾을 수 없습니다."
+ *       500:
+ *         description: 서버 에러
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: object
+ *                   properties:
+ *                     success:
+ *                       type: boolean
+ *                       example: false
+ *                     code:
+ *                       type: integer
+ *                       example: 500
+ *                     message:
+ *                       type: string
+ *                       example: "서버 에러가 발생했습니다."
+ */
+router.get('/:userId/following/count', followController.getFollowingCount);
+
 export default router;

@@ -38,10 +38,22 @@ const deleteFollower = async (userId, targetUserId) => {
   return follow;
 };
 
+const getFollowersCount = async (userId) => {
+  const followersCount = await followRepository.getFollowersCount(userId);
+  return followersCount;
+};
+
+const getFollowingCount = async (userId) => {
+  const followingCount = await followRepository.getFollowingCount(userId);
+  return followingCount;
+};
+
 export default {
   getFollowers,
   getFollowing,
   createFollow,
   deleteFollow,
   deleteFollower,
+  getFollowersCount,
+  getFollowingCount,
 };
