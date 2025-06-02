@@ -88,29 +88,29 @@ const editUserInfo = async (req, res) => {
   }
 };
 
-// const FindEmailAuth = async (req, res) => {
-//   const { email } = req.body;
-//   try {
-//     const result = await sendEmailAuth(email);
-//     res.status(200).json({ status: { success: true } });
-//   } catch (error) {
-//     res.status(500).json({
-//       status: { success: false, code: 500, message: error.message },
-//     });
-//   }
-// };
+const FindEmailAuth = async (req, res) => {
+  const { email } = req.body;
+  try {
+    // const result = await sendEmailAuth(email);
+    res.status(200).json({ status: { success: true } });
+  } catch (error) {
+    res.status(500).json({
+      status: { success: false, code: 500, message: error.message },
+    });
+  }
+};
 
-// const checkEmailAuth = async (req, res) => {
-//   const { email, authNum } = req.body;
-//   try {
-//     await userService.checkEmailAuth(email, authNum);
-//     res.status(200).json({ status: { success: true } });
-//   } catch (error) {
-//     res.status(500).json({
-//       status: { success: false, code: 500, message: error.message },
-//     });
-//   }
-// };
+const checkEmailAuth = async (req, res) => {
+  const { email, authNum } = req.body;
+  try {
+    await userService.checkEmailAuth(email, authNum);
+    res.status(200).json({ status: { success: true } });
+  } catch (error) {
+    res.status(500).json({
+      status: { success: false, code: 500, message: error.message },
+    });
+  }
+};
 
 const login = async (req, res) => {
   const { email, password } = req.body;
@@ -233,6 +233,8 @@ export default {
   editUserInfo,
   login,
   refreshAccessToken,
+  FindEmailAuth,
+  checkEmailAuth,
   logout,
   getMyGroup,
   checkEmail,
