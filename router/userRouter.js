@@ -366,7 +366,7 @@ router.get('/:userId', userController.getByUserId);
 /**
  * @swagger
  * /api/v1/user/delete:
- *   patch:
+ *   delete:
  *     tags:
  *       - User
  *     summary: 회원 탈퇴
@@ -401,7 +401,7 @@ router.get('/:userId', userController.getByUserId);
  *                   type: string
  *                   example: 에러 메시지
  */
-router.patch('/delete', jwtToken.accessVerifyToken, userController.deleteUser);
+router.delete('/delete', jwtToken.accessVerifyToken, userController.deleteUser);
 
 /**
  * @swagger
