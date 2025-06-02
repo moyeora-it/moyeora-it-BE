@@ -1,6 +1,5 @@
 import nodemailer from 'nodemailer';
 import dotenv from 'dotenv';
-import prisma from '../config/prisma.js';
 
 dotenv.config();
 
@@ -21,17 +20,12 @@ export const smtpTransport = nodemailer.createTransport({
   },
 });
 
-const generateRandomNumber = function (min, max) {
-  return Math.floor(Math.random() * (max - min + 1)) + min;
-};
-
-export const sendEmailAuth = async (email) => {
-  const number = generateRandomNumber(111111, 999999);
+export const sendEmailAuth = async (email, newPassword) => {
   const mailOptions = {
     from: process.env.EMAIL_USER,
     to: email,
-    subject: '인증 관련 메일 입니다.',
-    html: `<h1>인증번호를 입력해주세요 \n\n\n\n\n\n</h1> ${number}`,
+    subject: '임시 비밀번호 입니다.',
+    html: `<h1>임시 비밀번호 입니다. \n\n\n\n\n\n</h1> ${newPassword}`,
   };
 
   return new Promise((resolve, reject) => {
@@ -47,11 +41,7 @@ export const sendEmailAuth = async (email) => {
         resolve({
           ok: true,
           msg: '메일 전송에 성공하였습니다.',
-          authNum: number,
-        });
-        prisma.user.update({
-          where: { email },
-          data: { emailAuthentication: number },
+          authNum: newPassword,
         });
       }
     });
