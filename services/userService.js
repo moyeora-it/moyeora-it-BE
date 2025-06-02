@@ -101,6 +101,11 @@ const checkEmail = async (email) => {
   return user;
 };
 
+const resetPassword = async (email) => {
+  const user = await userRepository.resetPassword(email);
+  return user;
+};
+
 export default {
   createUser,
   deleteUser,
@@ -113,4 +118,5 @@ export default {
   getByUserId,
   getMyGroup,
   checkEmail,
+  resetPassword,
 };

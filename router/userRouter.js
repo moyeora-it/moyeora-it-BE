@@ -935,4 +935,81 @@ router.post(
  */
 router.post('/check-email', userController.checkEmail);
 
+/**
+ * @swagger
+ * /api/v1/user/reset-password:
+ *   post:
+ *     tags:
+ *       - User
+ *     summary: 비밀번호 재설정
+ *     description: 사용자의 이메일로 새로운 임시 비밀번호를 발급하고 이메일로 전송합니다.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - email
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 format: email
+ *                 description: 비밀번호를 재설정할 사용자의 이메일
+ *                 example: "user@example.com"
+ *     responses:
+ *       200:
+ *         description: 비밀번호 재설정 성공
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: object
+ *                   properties:
+ *                     success:
+ *                       type: boolean
+ *                       example: true
+ *       404:
+ *         description: 존재하지 않는 이메일
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: object
+ *                   properties:
+ *                     success:
+ *                       type: boolean
+ *                       example: false
+ *                     code:
+ *                       type: integer
+ *                       example: 404
+ *                     message:
+ *                       type: string
+ *                       example: "존재하지 않는 이메일입니다."
+ *       500:
+ *         description: 서버 에러
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: object
+ *                   properties:
+ *                     success:
+ *                       type: boolean
+ *                       example: false
+ *                     code:
+ *                       type: integer
+ *                       example: 500
+ *                     message:
+ *                       type: string
+ *                       example: "서버 에러가 발생했습니다."
+ */
+router.post('/reset-password', userController.resetPassword);
+
 export default router;

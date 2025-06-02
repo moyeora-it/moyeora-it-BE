@@ -1,5 +1,5 @@
 import userService from '../services/userService.js';
-import { sendEmailAuth } from '../config/smtp.js';
+// import { sendEmailAuth } from '../config/SMTP.js';
 import {
   accessTokenOption,
   refreshTokenOption,
@@ -88,29 +88,29 @@ const editUserInfo = async (req, res) => {
   }
 };
 
-const FindEmailAuth = async (req, res) => {
-  const { email } = req.body;
-  try {
-    const result = await sendEmailAuth(email);
-    res.status(200).json({ status: { success: true } });
-  } catch (error) {
-    res.status(500).json({
-      status: { success: false, code: 500, message: error.message },
-    });
-  }
-};
+// const FindEmailAuth = async (req, res) => {
+//   const { email } = req.body;
+//   try {
+//     const result = await sendEmailAuth(email);
+//     res.status(200).json({ status: { success: true } });
+//   } catch (error) {
+//     res.status(500).json({
+//       status: { success: false, code: 500, message: error.message },
+//     });
+//   }
+// };
 
-const checkEmailAuth = async (req, res) => {
-  const { email, authNum } = req.body;
-  try {
-    await userService.checkEmailAuth(email, authNum);
-    res.status(200).json({ status: { success: true } });
-  } catch (error) {
-    res.status(500).json({
-      status: { success: false, code: 500, message: error.message },
-    });
-  }
-};
+// const checkEmailAuth = async (req, res) => {
+//   const { email, authNum } = req.body;
+//   try {
+//     await userService.checkEmailAuth(email, authNum);
+//     res.status(200).json({ status: { success: true } });
+//   } catch (error) {
+//     res.status(500).json({
+//       status: { success: false, code: 500, message: error.message },
+//     });
+//   }
+// };
 
 const login = async (req, res) => {
   const { email, password } = req.body;
@@ -204,6 +204,18 @@ const checkEmail = async (req, res) => {
   }
 };
 
+const resetPassword = async (req, res) => {
+  const { email } = req.body;
+  try {
+    await userService.resetPassword(email);
+    res.status(200).json({ status: { success: true } });
+  } catch (error) {
+    res.status(500).json({
+      status: { success: false, code: 500, message: error.message },
+    });
+  }
+};
+
 // const redisToLogin = async (req, res) => {
 //   const { email, password } = req.body;
 //   try {
@@ -219,11 +231,10 @@ export default {
   userInfo,
   getByUserId,
   editUserInfo,
-  FindEmailAuth,
-  checkEmailAuth,
   login,
   refreshAccessToken,
   logout,
   getMyGroup,
   checkEmail,
+  resetPassword,
 };
