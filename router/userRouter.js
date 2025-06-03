@@ -1014,8 +1014,8 @@ router.post('/reset-password', userController.resetPassword);
 
 /**
  * @swagger
- * /api/users/password-change:
-  post:
+ * /api/v1/user/password-change:
+  patch:
     tags:
       - User
     summary: 비밀번호 변경
@@ -1074,7 +1074,7 @@ router.post('/reset-password', userController.resetPassword);
                       type: string
                       example: "현재 비밀번호가 일치하지 않습니다."
  */
-router.post(
+router.patch(
   '/password-change',
   jwtToken.accessVerifyToken,
   userController.PasswordChange
