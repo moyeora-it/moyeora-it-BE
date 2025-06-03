@@ -34,6 +34,8 @@ const io = new Server(server, {
     origin: 'http://localhost:3000',
     credentials: true,
   },
+  transports: ['websocket', 'polling'],
+  path: '/socket.io/',
 });
 
 socket(io);
