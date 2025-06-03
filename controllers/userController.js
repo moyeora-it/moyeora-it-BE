@@ -225,6 +225,19 @@ const resetPassword = async (req, res) => {
 //   }
 // };
 
+const PasswordChange = async (req, res) => {
+  const { id: userId } = req.user;
+  const { newPassword, confirmPassword } = req.body;
+  try {
+    await userService.passwordChange(userId, newPassword, confirmPassword);
+    res.status(200).json({ status: { success: true } });
+  } catch (error) {
+    res.status(500).json({
+      status: { success: false, code: 500, message: error.message },
+    });
+  }
+};
+
 export default {
   signup,
   deleteUser,
@@ -239,4 +252,5 @@ export default {
   getMyGroup,
   checkEmail,
   resetPassword,
+  PasswordChange,
 };

@@ -254,6 +254,28 @@ const resetPassword = async (email) => {
   return;
 };
 
+const passwordChange = async (userId, newPassword, confirmPassword) => {
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+  });
+  if (!user) {
+    throw new Error('존재하지 않는 유저입니다.');
+  }
+
+  const isCurrentPasswordValid = await bcrypt.compare(
+    confirmPassword,
+    user.password
+  );
+  if (!isCurrentPasswordValid) {
+    throw new Error('현재 비밀번호가 일치하지 않습니다.');
+  }
+  const hashedPassword = await bcrypt.hash(newPassword, 10);
+  await prisma.user.update({
+    where: { id: userId },
+    data: { password: hashedPassword },
+  });
+  return;
+};
 export default {
   createUser,
   deleteUser,
@@ -267,4 +289,5 @@ export default {
   getMyGroup,
   checkEmail,
   resetPassword,
+  passwordChange,
 };

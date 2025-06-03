@@ -106,6 +106,15 @@ const resetPassword = async (email) => {
   return user;
 };
 
+const passwordChange = async (userId, newPassword, confirmPassword) => {
+  const user = await userRepository.passwordChange(
+    userId,
+    newPassword,
+    confirmPassword
+  );
+  return user;
+};
+
 export default {
   createUser,
   deleteUser,
@@ -119,4 +128,5 @@ export default {
   getMyGroup,
   checkEmail,
   resetPassword,
+  passwordChange,
 };
