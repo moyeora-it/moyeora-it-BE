@@ -713,12 +713,12 @@ router.delete('/delete', jwtToken.accessVerifyToken, userController.deleteUser);
  *                 description: 닉네임
  *               position:
  *                 type: string
- *                 example: 백엔드
+ *                 enum: [PM, PL, AA, TA, DA, QA, FE, BE, FS]
  *                 description: 포지션
  *               skills:
  *                 type: string
  *                 example: Java,JavaScript
- *                 description: 쉼표(,)로 구분된 기술 스택 문자열
+ *                 description: 쉼표(,)로 구분된 기술 스택 문자열 (Java, JavaScript, HTML_CSS, REACT, Vue, Kotlin, Spring 중 선택)
  *               newPassword:
  *                 type: string
  *                 format: password
@@ -728,7 +728,7 @@ router.delete('/delete', jwtToken.accessVerifyToken, userController.deleteUser);
  *                 type: string
  *                 format: password
  *                 example: newpassword123
- *                 description: 새 비밀번호 확인(변경 시)
+ *                 description: 기존 비밀번호 확인(변경 시)
  *     responses:
  *       200:
  *         description: 유저 정보 수정 성공
