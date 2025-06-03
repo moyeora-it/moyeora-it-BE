@@ -107,15 +107,17 @@ const editUserInfo = async (
     newPassword = hashedNewPassword;
   }
 
+  const updateData = {
+    ...(nickname && { nickname }),
+    ...(position && { position }),
+    ...(skills && { skills }),
+    ...(newPassword && { password: newPassword }),
+    ...(image && { profile_image: image }),
+  };
+
   const user = await prisma.user.update({
     where: { id: id },
-    data: {
-      nickname,
-      position,
-      skills,
-      ...(newPassword && { password: newPassword }),
-      ...(image && { profile_image: image }),
-    },
+    data: updateData,
   });
   return user;
 };

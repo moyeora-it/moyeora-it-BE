@@ -713,7 +713,7 @@ router.delete('/delete', jwtToken.accessVerifyToken, userController.deleteUser);
  *                 description: 닉네임
  *               position:
  *                 type: string
- *                 example: 백엔드
+ *                 enum: [PM, PL, AA, TA, DA, QA, FE, BE, FS]
  *                 description: 포지션
  *               skills:
  *                 type: string
@@ -728,7 +728,7 @@ router.delete('/delete', jwtToken.accessVerifyToken, userController.deleteUser);
  *                 type: string
  *                 format: password
  *                 example: newpassword123
- *                 description: 새 비밀번호 확인(변경 시)
+ *                 description: 기존 비밀번호 확인(변경 시)
  *     responses:
  *       200:
  *         description: 유저 정보 수정 성공
