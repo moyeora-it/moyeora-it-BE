@@ -718,7 +718,7 @@ router.delete('/delete', jwtToken.accessVerifyToken, userController.deleteUser);
  *               skills:
  *                 type: string
  *                 example: Java,JavaScript
- *                 description: 쉼표(,)로 구분된 기술 스택 문자열
+ *                 description: 쉼표(,)로 구분된 기술 스택 문자열 (Java, JavaScript, HTML_CSS, REACT, Vue, Kotlin, Spring 중 선택)
  *               newPassword:
  *                 type: string
  *                 format: password
