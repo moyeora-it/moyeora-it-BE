@@ -36,7 +36,7 @@ const io = new Server(server, {
   },
   transports: ['websocket', 'polling'],
   path: '/socket.io/',
-  allowEIO3: true,
+  allowEIO4: true,
 });
 
 socket(io);
