@@ -722,12 +722,12 @@ router.delete('/delete', jwtToken.accessVerifyToken, userController.deleteUser);
  *               newPassword:
  *                 type: string
  *                 format: password
- *                 example: newpassword123
+ *                 example:
  *                 description: 새 비밀번호(변경 시)
  *               confirmPassword:
  *                 type: string
  *                 format: password
- *                 example: newpassword123
+ *                 example:
  *                 description: 기존 비밀번호 확인(변경 시)
  *     responses:
  *       200:
@@ -1011,5 +1011,73 @@ router.post('/check-email', userController.checkEmail);
  *                       example: "서버 에러가 발생했습니다."
  */
 router.post('/reset-password', userController.resetPassword);
+
+/**
+ * @swagger
+ * /api/users/password-change:
+  post:
+    tags:
+      - User
+    summary: 비밀번호 변경
+    description: 사용자의 비밀번호를 변경합니다.
+    security:
+      - bearerAuth: []
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - newPassword
+              - confirmPassword
+            properties:
+              newPassword:
+                type: string
+                description: 새로운 비밀번호
+                example: "newPassword123!"
+              confirmPassword:
+                type: string
+                description: 현재 비밀번호
+                example: "currentPassword123!"
+    responses:
+      '200':
+        description: 비밀번호 변경 성공
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                status:
+                  type: object
+                  properties:
+                    success:
+                      type: boolean
+                      example: true
+      '500':
+        description: 서버 에러
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                status:
+                  type: object
+                  properties:
+                    success:
+                      type: boolean
+                      example: false
+                    code:
+                      type: integer
+                      example: 500
+                    message:
+                      type: string
+                      example: "현재 비밀번호가 일치하지 않습니다."
+ */
+router.post(
+  '/password-change',
+  jwtToken.accessVerifyToken,
+  userController.PasswordChange
+);
 
 export default router;
