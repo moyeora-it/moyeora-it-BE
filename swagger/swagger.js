@@ -12,6 +12,7 @@ const options = {
       { name: 'User', description: '사용자 관련 API' },
       { name: 'Follow', description: '팔로우 관련 API' },
       { name: 'Rating', description: '평점 관련 API' },
+      { name: 'Notification', description: '알림 관련 API' },
       { name: 'Auth', description: '인증 관련 API' },
     ],
   },
