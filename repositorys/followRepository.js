@@ -25,19 +25,21 @@ const getFollowers = async (userId, size, cursor, name) => {
           id: true,
           email: true,
           nickname: true,
+          profile_image: true,
         },
       },
     },
   });
 
-  const followersWithStatus = followers.map((follower) => ({
-    ...follower,
-    follower: {
-      ...follower.follower,
+  const followersWithStatus = followers.map((follower) => {
+    const { profile_image, ...rest } = follower.follower;
+    return {
+      ...rest,
+      profileImage: profile_image,
       isFollower: false,
       isFollowing: false,
-    },
-  }));
+    };
+  });
 
   const hasNext = followers.length === size;
   const nextCursor = hasNext ? cursor + size : null;
@@ -72,19 +74,21 @@ const getFollowing = async (userId, size, cursor, name) => {
           id: true,
           email: true,
           nickname: true,
+          profile_image: true,
         },
       },
     },
   });
 
-  const followingWithStatus = following.map((following) => ({
-    ...following,
-    following: {
-      ...following.following,
+  const followingWithStatus = following.map((following) => {
+    const { profile_image, ...rest } = following.following;
+    return {
+      ...rest,
+      profileImage: profile_image,
       isFollower: false,
       isFollowing: false,
-    },
-  }));
+    };
+  });
 
   const hasNext = following.length === size;
   const nextCursor = hasNext ? cursor + size : null;
