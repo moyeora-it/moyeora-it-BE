@@ -645,6 +645,9 @@ router.get('/:userId', userController.getByUserId);
  *                     success:
  *                       type: boolean
  *                       example: true
+ *                 message:
+ *                   type: string
+ *                   example: 회원탈퇴 성공
  *       401:
  *         description: 인증 실패
  *         content:
@@ -682,7 +685,7 @@ router.get('/:userId', userController.getByUserId);
  *                       example: 500
  *                     message:
  *                       type: string
- *                       example: 서버 에러가 발생했습니다.
+ *                       example: 회원탈퇴 실패
  */
 router.delete('/delete', jwtToken.accessVerifyToken, userController.deleteUser);
 
