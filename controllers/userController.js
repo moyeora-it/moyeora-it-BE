@@ -225,7 +225,7 @@ const resetPassword = async (req, res) => {
 //   }
 // };
 
-const PasswordChange = async (req, res) => {
+const passwordChange = async (req, res) => {
   const { id: userId } = req.user;
   const { newPassword, confirmPassword } = req.body;
   try {
@@ -252,5 +252,5 @@ export default {
   getMyGroup,
   checkEmail,
   resetPassword,
-  PasswordChange,
+  passwordChange,
 };

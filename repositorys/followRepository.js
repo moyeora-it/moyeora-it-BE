@@ -3,9 +3,9 @@ import prisma from '../config/prisma.js';
 const getFollowers = async (userId, size, cursor, name) => {
   // name이 null이면 검색 조건을 제외
   const whereCondition = {
-    following_id: userId,
+    follower_id: userId,
     ...(name && {
-      following: {
+      follower: {
         nickname: { contains: name, mode: 'insensitive' },
       },
     }),
@@ -20,7 +20,7 @@ const getFollowers = async (userId, size, cursor, name) => {
     take: size,
     skip: cursor,
     include: {
-      following: {
+      follower: {
         select: {
           id: true,
           email: true,
@@ -30,11 +30,20 @@ const getFollowers = async (userId, size, cursor, name) => {
     },
   });
 
+  const followersWithStatus = followers.map((follower) => ({
+    ...follower,
+    follower: {
+      ...follower.follower,
+      isFollower: false,
+      isFollowing: false,
+    },
+  }));
+
   const hasNext = followers.length === size;
   const nextCursor = hasNext ? cursor + size : null;
 
   return {
-    items: followers,
+    items: followersWithStatus,
     cursor: nextCursor,
     hasNext,
     totalCount: followTotalCount,
@@ -68,11 +77,20 @@ const getFollowing = async (userId, size, cursor, name) => {
     },
   });
 
+  const followingWithStatus = following.map((following) => ({
+    ...following,
+    following: {
+      ...following.following,
+      isFollower: false,
+      isFollowing: false,
+    },
+  }));
+
   const hasNext = following.length === size;
   const nextCursor = hasNext ? cursor + size : null;
 
   return {
-    items: following,
+    items: followingWithStatus,
     hasNext,
     cursor: nextCursor,
     totalCount: followTotalCount,
