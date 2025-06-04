@@ -177,7 +177,6 @@ const getByUserId = async (userId) => {
       skills: true,
       follower: true,
       following: true,
-      _count: true,
       rated_ratings: {
         select: {
           rating: true,
@@ -193,10 +192,8 @@ const getByUserId = async (userId) => {
       : 0;
   const { profile_image, ...rest } = user;
   return {
-    items: {
-      ...rest,
-      profileImage: profile_image,
-    },
+    ...rest,
+    profileImage: profile_image,
     averageRating,
   };
 };
