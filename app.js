@@ -14,7 +14,11 @@ const server = http.createServer(app);
 
 app.use(
   cors({
-    origin: ['http://localhost:3000', 'http://127.0.0.1'],
+    origin: [
+      'http://localhost:3000',
+      'http://127.0.0.1',
+      'https://localhost:3000',
+    ],
     credentials: true,
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   })
@@ -32,7 +36,11 @@ app.use(
 
 const io = new Server(server, {
   cors: {
-    origin: ['http://localhost:3000', 'http://127.0.0.1'],
+    origin: [
+      'http://localhost:3000',
+      'http://127.0.0.1',
+      'https://localhost:3000',
+    ],
     credentials: true,
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   },
