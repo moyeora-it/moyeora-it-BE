@@ -124,10 +124,10 @@ const login = async (req, res) => {
     const refreshToken = await userService.createAccessToken(user, 'refresh');
 
     res.cookie('accessToken', accessToken, accessTokenOption, {
-      domain: 'localhost',
+      domain: '127.0.0.1',
     });
     res.cookie('refreshToken', refreshToken, refreshTokenOption, {
-      domain: 'localhost',
+      domain: '127.0.0.1',
     });
     res.status(200).json({ status: { success: true }, message: '로그인 성공' });
   } catch (error) {
