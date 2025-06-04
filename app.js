@@ -14,8 +14,9 @@ const server = http.createServer(app);
 
 app.use(
   cors({
-    origin: '*',
+    origin: ['http://localhost:3000', 'http://127.0.0.1'],
     credentials: true,
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   })
 );
 app.use(express.json());
@@ -31,8 +32,9 @@ app.use(
 
 const io = new Server(server, {
   cors: {
-    origin: '*',
+    origin: ['http://localhost:3000', 'http://127.0.0.1'],
     credentials: true,
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   },
   transports: ['websocket', 'polling'],
   path: '/socket.io/',
