@@ -123,8 +123,12 @@ const login = async (req, res) => {
     const accessToken = await userService.createAccessToken(user);
     const refreshToken = await userService.createAccessToken(user, 'refresh');
 
-    res.cookie('accessToken', accessToken, accessTokenOption);
-    res.cookie('refreshToken', refreshToken, refreshTokenOption);
+    res.cookie('accessToken', accessToken, accessTokenOption, {
+      domain: 'localhost',
+    });
+    res.cookie('refreshToken', refreshToken, refreshTokenOption, {
+      domain: 'localhost',
+    });
     res.status(200).json({ status: { success: true }, message: '로그인 성공' });
   } catch (error) {
     res.status(500).json({
