@@ -4,6 +4,7 @@ const accessTokenOption = {
   sameSite: 'None',
   maxAge: 1000 * 60 * 60 * 3,
   path: '/',
+  domain: '127.0.0.1',
 };
 
 const refreshTokenOption = {
@@ -12,6 +13,7 @@ const refreshTokenOption = {
   sameSite: 'None',
   maxAge: 1000 * 60 * 60 * 24 * 7,
   path: '/',
+  domain: '127.0.0.1',
 };
 
 const clearAccessTokenOption = {
