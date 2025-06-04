@@ -5,7 +5,7 @@ const getFollowers = async (userId, size, cursor, name) => {
   const whereCondition = {
     follower_id: userId,
     ...(name && {
-      follower: {
+      following: {
         nickname: { contains: name, mode: 'insensitive' },
       },
     }),
@@ -20,7 +20,7 @@ const getFollowers = async (userId, size, cursor, name) => {
     take: size,
     skip: cursor,
     include: {
-      follower: {
+      following: {
         select: {
           id: true,
           email: true,
@@ -32,7 +32,7 @@ const getFollowers = async (userId, size, cursor, name) => {
   });
 
   const followersWithStatus = followers.map((follower) => {
-    const { profile_image, ...rest } = follower.follower;
+    const { profile_image, ...rest } = follower.following;
     return {
       ...rest,
       profileImage: profile_image,
@@ -54,7 +54,7 @@ const getFollowers = async (userId, size, cursor, name) => {
 
 const getFollowing = async (userId, size, cursor, name) => {
   const whereCondition = {
-    following_id: userId,
+    follower_id: userId,
     ...(name && {
       following: {
         nickname: { contains: name, mode: 'insensitive' },
@@ -80,8 +80,8 @@ const getFollowing = async (userId, size, cursor, name) => {
     },
   });
 
-  const followingWithStatus = following.map((following) => {
-    const { profile_image, ...rest } = following.following;
+  const followingWithStatus = following.map((item) => {
+    const { profile_image, ...rest } = item.following;
     return {
       ...rest,
       profileImage: profile_image,
