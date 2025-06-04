@@ -68,7 +68,14 @@ const getUserInfo = async (userId) => {
         10
       : 0;
 
-  return { items: user, averageRating };
+  const { profile_image, ...rest } = user;
+  return {
+    items: {
+      ...rest,
+      profileImage: profile_image,
+    },
+    averageRating,
+  };
 };
 
 const editUserInfo = async (
@@ -119,7 +126,9 @@ const editUserInfo = async (
     where: { id: id },
     data: updateData,
   });
-  return user;
+
+  const { profile_image, ...rest } = user;
+  return { ...rest, profileImage: profile_image };
 };
 
 const checkEmailAuth = async (email, authNum) => {
@@ -182,7 +191,14 @@ const getByUserId = async (userId) => {
       ? Math.round((ratings.reduce((a, b) => a + b, 0) / ratings.length) * 10) /
         10
       : 0;
-  return { items: user, averageRating };
+  const { profile_image, ...rest } = user;
+  return {
+    items: {
+      ...rest,
+      profileImage: profile_image,
+    },
+    averageRating,
+  };
 };
 
 const getMyGroup = async (
