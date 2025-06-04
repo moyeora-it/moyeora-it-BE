@@ -22,17 +22,17 @@ export default function socket(socketIo) {
     });
 
     // Message 추가
-    socket.on('messageS', (message) => {
+    socket.on('notification', (message) => {
       console.log('받은 메시지:', message);
-      const targetSocketId = userSocketMap.get(message.targetUserId);
+      const targetSocketId = userSocketMap.get(parseInt(message.targetUserId));
 
       if (targetSocketId) {
         console.log('메시지 전송 시도:', {
           message,
         });
-        socketIo.to(targetSocketId).emit('messageC', message);
+        socketIo.to(targetSocketId).emit('notification', message);
       } else {
-        socket.emit('messageC', {
+        socket.emit('notification', {
           sender: 'SYSTEM',
           targetUserId: message.sender,
           data: '수신자를 찾을 수 없습니다.',

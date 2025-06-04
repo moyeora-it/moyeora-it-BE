@@ -524,12 +524,12 @@ router.delete(
 
 /**
  * @swagger
- * /api/v1/follow/{userId}/unfollow:
+ * /api/v1/follow/{userId}/unfollower:
  *   delete:
  *     tags:
  *       - Follow
- *     summary: 팔로우 삭제
- *     description: 특정 사용자에 대한 팔로우를 삭제합니다.
+ *     summary: 팔로워 삭제
+ *     description: 특정 사용자를 내 팔로워 목록에서 삭제합니다.
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -539,10 +539,10 @@ router.delete(
  *         schema:
  *           type: integer
  *           example: 1
- *         description: 팔로우를 삭제할 대상 사용자의 ID
+ *         description: 삭제할 팔로워의 사용자 ID
  *     responses:
- *       200:
- *         description: 팔로우 삭제 성공
+ *       204:
+ *         description: 팔로워 삭제 성공
  *         content:
  *           application/json:
  *             schema:
