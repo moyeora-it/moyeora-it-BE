@@ -1015,69 +1015,69 @@ router.post('/reset-password', userController.resetPassword);
 /**
  * @swagger
  * /api/v1/user/password-change:
-  patch:
-    tags:
-      - User
-    summary: 비밀번호 변경
-    description: 사용자의 비밀번호를 변경합니다.
-    security:
-      - bearerAuth: []
-    requestBody:
-      required: true
-      content:
-        application/json:
-          schema:
-            type: object
-            required:
-              - newPassword
-              - confirmPassword
-            properties:
-              newPassword:
-                type: string
-                description: 새로운 비밀번호
-                example: "newPassword123!"
-              confirmPassword:
-                type: string
-                description: 현재 비밀번호
-                example: "currentPassword123!"
-    responses:
-      '200':
-        description: 비밀번호 변경 성공
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                status:
-                  type: object
-                  properties:
-                    success:
-                      type: boolean
-                      example: true
-      '500':
-        description: 서버 에러
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                status:
-                  type: object
-                  properties:
-                    success:
-                      type: boolean
-                      example: false
-                    code:
-                      type: integer
-                      example: 500
-                    message:
-                      type: string
-                      example: "현재 비밀번호가 일치하지 않습니다."
+ *   patch:
+ *     tags:
+ *       - User
+ *     summary: 비밀번호 변경
+ *     description: 사용자의 비밀번호를 변경합니다.
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - newPassword
+ *               - confirmPassword
+ *             properties:
+ *               newPassword:
+ *                 type: string
+ *                 description: 새로운 비밀번호
+ *                 example: "newPassword123!"
+ *               confirmPassword:
+ *                 type: string
+ *                 description: 현재 비밀번호
+ *                 example: "currentPassword123!"
+ *     responses:
+ *       '200':
+ *         description: 비밀번호 변경 성공
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: object
+ *                   properties:
+ *                     success:
+ *                       type: boolean
+ *                       example: true
+ *       '500':
+ *         description: 서버 에러
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: object
+ *                   properties:
+ *                     success:
+ *                       type: boolean
+ *                       example: false
+ *                     code:
+ *                       type: integer
+ *                       example: 500
+ *                     message:
+ *                       type: string
+ *                       example: "현재 비밀번호가 일치하지 않습니다."
  */
 router.patch(
   '/password-change',
   jwtToken.accessVerifyToken,
-  userController.PasswordChange
+  userController.passwordChange
 );
 
 export default router;
