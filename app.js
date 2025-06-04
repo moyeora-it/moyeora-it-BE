@@ -60,6 +60,7 @@ const io = new Server(server, {
 });
 
 socket(io);
+app.set('io', io);
 
 server.listen(3001, () => {
   console.log(`🏇${app.get('port')}에서 서버가 실행중입니다!🚴🏻  `);

@@ -39,10 +39,19 @@ const getNotificationCount = async (userId) => {
   return notificationCount;
 };
 
+const createNotification = async (targetUserId, message) => {
+  const notification = await notificationRepository.createNotification(
+    targetUserId,
+    message
+  );
+  return notification;
+};
+
 export default {
   getNotification,
   readNotification,
   deleteNotification,
   deleteAllNotification,
   getNotificationCount,
+  createNotification,
 };

@@ -396,4 +396,80 @@ router.get(
   jwtToken.accessVerifyToken,
   notificationController.getNotificationCount
 );
+
+/**
+ * @swagger
+ * /api/v1/notification/spring:
+ *   post:
+ *     tags:
+ *       - Notification
+ *     summary: 외부 시스템(스프링)에서 알림 생성
+ *     description: Spring 등 외부 시스템에서 targetUserId에게 알림을 생성하고, 실시간 소켓 알림도 전송합니다.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - targetUserId
+ *               - message
+ *             properties:
+ *               targetUserId:
+ *                 type: integer
+ *                 description: 알림을 받을 사용자 ID
+ *                 example: 1
+ *               message:
+ *                 type: string
+ *                 description: 알림 내용
+ *                 example: "새로운 알림이 도착했습니다."
+ *               notificationType:
+ *                 type: string
+ *                 description: 알림 타입(선택)
+ *                 example: "COMMENT"
+ *               url:
+ *                 type: string
+ *                 description: 알림 클릭 시 이동할 URL(선택)
+ *                 example: "/group/1"
+ *     responses:
+ *       200:
+ *         description: 알림 생성 및 소켓 전송 성공
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: object
+ *                   properties:
+ *                     success:
+ *                       type: boolean
+ *                       example: true
+ *                     code:
+ *                       type: integer
+ *                       example: 200
+ *                     message:
+ *                       type: object
+ *                       description: 생성된 알림 객체
+ *       500:
+ *         description: 서버 에러
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: object
+ *                   properties:
+ *                     success:
+ *                       type: boolean
+ *                       example: false
+ *                     code:
+ *                       type: integer
+ *                       example: 500
+ *                     message:
+ *                       type: string
+ *                       example: "서버 에러가 발생했습니다."
+ */
+router.post('/spring', notificationController.createNotification);
 export default router;

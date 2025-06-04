@@ -85,10 +85,35 @@ const getNotificationCount = async (req, res) => {
   }
 };
 
+const createNotification = async (req, res) => {
+  const { targetUserId, message, notificationType, url } = req.body;
+  try {
+    const notification = await notificationService.createNotification(
+      parseInt(targetUserId),
+      message
+    );
+    const io = req.app.get('io');
+    io.emit('notification', {
+      targetUserId,
+      message,
+      notificationType,
+      url,
+    });
+    res.status(200).json({
+      status: { success: true, code: 200, message: notification },
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: { success: false, code: 500, message: error.message },
+    });
+  }
+};
+
 export default {
   getNotification,
   readNotification,
   deleteNotification,
   deleteAllNotification,
   getNotificationCount,
+  createNotification,
 };
