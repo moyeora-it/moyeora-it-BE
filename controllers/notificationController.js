@@ -9,7 +9,7 @@ const getNotification = async (req, res) => {
       parseInt(size) || 10,
       parseInt(cursor) || 0
     );
-    res.status(200).json({ status: { success: true }, items: notifications });
+    res.status(200).json({ status: { success: true }, notifications });
   } catch (error) {
     res.status(500).json({
       status: { success: false, code: 500, message: error.message },
