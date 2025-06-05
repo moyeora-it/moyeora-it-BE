@@ -162,14 +162,14 @@ const deleteFollower = async (userId, targetUserId) => {
 
 const getFollowersCount = async (userId) => {
   const followersCount = await prisma.follow.count({
-    where: { following_id: userId },
+    where: { follower_id: userId },
   });
   return followersCount;
 };
 
 const getFollowingCount = async (userId) => {
   const followingCount = await prisma.follow.count({
-    where: { follower_id: userId },
+    where: { following_id: userId },
   });
   return followingCount;
 };
