@@ -5,7 +5,7 @@ const getFollowers = async (userId, targetUserId, size, cursor, name) => {
   const whereCondition = {
     following_id: targetUserId,
     ...(name && {
-      following: {
+      follower: {
         nickname: { contains: name, mode: 'insensitive' },
       },
     }),
@@ -20,7 +20,7 @@ const getFollowers = async (userId, targetUserId, size, cursor, name) => {
     take: size,
     skip: cursor,
     include: {
-      following: {
+      follower: {
         select: {
           id: true,
           email: true,
@@ -32,7 +32,7 @@ const getFollowers = async (userId, targetUserId, size, cursor, name) => {
   });
 
   // 모든 관계를 한 번에 가져오기
-  const followerIds = followers.map((f) => f.following.id);
+  const followerIds = followers.map((f) => f.follower.id);
   const [followingRelations, followerRelations] = await Promise.all([
     prisma.follow.findMany({
       where: {
@@ -49,12 +49,12 @@ const getFollowers = async (userId, targetUserId, size, cursor, name) => {
   ]);
 
   const followersWithStatus = followers.map((follower) => {
-    const { profile_image, ...rest } = follower.following;
+    const { profile_image, ...rest } = follower.follower;
     const isFollowing = followingRelations.some(
-      (rel) => rel.following_id === follower.following.id
+      (rel) => rel.following_id === follower.follower.id
     );
     const isFollower = followerRelations.some(
-      (rel) => rel.follower_id === follower.following.id
+      (rel) => rel.follower_id === follower.follower.id
     );
 
     return {
@@ -80,7 +80,7 @@ const getFollowing = async (userId, targetUserId, size, cursor, name) => {
   const whereCondition = {
     follower_id: targetUserId,
     ...(name && {
-      follower: {
+      following: {
         nickname: { contains: name, mode: 'insensitive' },
       },
     }),
@@ -93,7 +93,7 @@ const getFollowing = async (userId, targetUserId, size, cursor, name) => {
     take: size,
     skip: cursor,
     include: {
-      follower: {
+      following: {
         select: {
           id: true,
           email: true,
@@ -105,7 +105,7 @@ const getFollowing = async (userId, targetUserId, size, cursor, name) => {
   });
 
   // 모든 관계를 한 번에 가져오기
-  const followingIds = following.map((f) => f.follower.id);
+  const followingIds = following.map((f) => f.following.id);
   const [followingRelations, followerRelations] = await Promise.all([
     prisma.follow.findMany({
       where: {
@@ -122,12 +122,12 @@ const getFollowing = async (userId, targetUserId, size, cursor, name) => {
   ]);
 
   const followingWithStatus = following.map((item) => {
-    const { profile_image, ...rest } = item.follower;
+    const { profile_image, ...rest } = item.following;
     const isFollowing = followingRelations.some(
-      (rel) => rel.following_id === item.follower.id
+      (rel) => rel.following_id === item.following.id
     );
     const isFollower = followerRelations.some(
-      (rel) => rel.follower_id === item.follower.id
+      (rel) => rel.follower_id === item.following.id
     );
 
     return {
