@@ -72,7 +72,7 @@ const editUserInfo = async (req, res) => {
     const user = await userService.editUserInfo(
       parseInt(id),
       nickname,
-      position,
+      parseInt(position),
       skills,
       newPassword,
       confirmPassword,

@@ -715,11 +715,11 @@ router.delete('/delete', jwtToken.accessVerifyToken, userController.deleteUser);
  *                 example: 홍길동
  *                 description: 닉네임
  *               position:
- *                 type: string
- *                 example: 1,2,3,4
+ *                 type: Int
+ *                 example: 1
  *                 description: 포지션
  *               skills:
- *                 type: string
+ *                 type: Int
  *                 example: 1,2,3,4
  *                 description: 쉼표(,)로 구분된 기술 스택 문자열 (1,2,3,4중 선택)
  *               newPassword:
