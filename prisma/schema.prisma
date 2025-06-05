@@ -30,8 +30,8 @@ model user {
   created_at           DateTime       @default(now())
   updated_at           DateTime       @updatedAt
   is_deleted           Boolean        @default(false)
-  position             String?
-  skills               String?
+  position             Int[]
+  skills               Int[]
   group                group[]
   reply                reply[]
   bookmark             bookmark[]
@@ -53,10 +53,10 @@ model group {
   content          String
   end_date         DateTime // 모임 종료일
   max_participants Int // 모임 최대 참여 인원
-  positions        String?
+  positions        Int[]
   first_user_id    Int? // 방장 유저 아이디
   views            Int            @default(0)
-  skills           String?
+  skills           Int[]
   type             String //study, project, all
   status           Boolean        @default(true) // 모집 상태 기본값 True
   auto_allow       Boolean
