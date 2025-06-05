@@ -54,7 +54,7 @@ const getByUserId = async (req, res) => {
   const { userId } = req.params;
   try {
     const user = await userService.getByUserId(parseInt(userId));
-    res.status(200).json({ status: { success: true }, user });
+    res.status(200).json({ status: { success: true }, data: user });
   } catch (error) {
     res.status(500).json({
       status: { success: false, code: 500, message: error.message },
@@ -66,13 +66,8 @@ const editUserInfo = async (req, res) => {
   try {
     const { id } = req.user;
     const image = req.file ? req.file.location : undefined;
-    const { nickname, position, newPassword, confirmPassword } = req.body;
-    let skills = req.body.skills;
-
-    if (skills) {
-      // 쉼표로 구분된 문자열을 Skill enum 배열로 변환
-      skills = skills.split(',').map((skill) => skill.trim());
-    }
+    const { nickname, position, newPassword, confirmPassword, skills } =
+      req.body;
 
     const user = await userService.editUserInfo(
       parseInt(id),
