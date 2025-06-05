@@ -78,7 +78,7 @@ const editUserInfo = async (req, res) => {
       confirmPassword,
       image
     );
-    res.status(200).json({ status: { success: true }, items: user });
+    res.status(200).json({ status: { success: true }, data: user });
   } catch (error) {
     res.status(500).json({
       status: { success: false, code: 500, message: error.message },
