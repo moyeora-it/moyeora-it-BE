@@ -114,10 +114,19 @@ const editUserInfo = async (
     newPassword = hashedNewPassword;
   }
 
+  // skills 문자열을 배열로 변환
+  const skillsArray = skills
+    ? skills.split(',').map((skill) => skill.trim())
+    : undefined;
+
+  const positionArray = position
+    ? position.split(',').map((position) => position.trim())
+    : undefined;
+
   const updateData = {
     ...(nickname && { nickname }),
-    ...(position && { position }),
-    ...(skills && { skills }),
+    ...(positionArray && { position: positionArray }),
+    ...(skillsArray && { skills: skillsArray }),
     ...(newPassword && { password: newPassword }),
     ...(image && { profile_image: image }),
   };

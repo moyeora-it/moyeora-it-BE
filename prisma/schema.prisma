@@ -13,18 +13,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum position {
-  PM
-  PL
-  AA
-  TA
-  DA
-  QA
-  FE
-  BE
-  FS
-}
-
 enum provider {
   KAKAO
   GOOGLE
@@ -42,7 +30,7 @@ model user {
   created_at           DateTime       @default(now())
   updated_at           DateTime       @updatedAt
   is_deleted           Boolean        @default(false)
-  position             position?
+  position             String?
   skills               String?
   group                group[]
   reply                reply[]
@@ -65,7 +53,7 @@ model group {
   content          String
   end_date         DateTime // 모임 종료일
   max_participants Int // 모임 최대 참여 인원
-  positions        position[]
+  positions        String?
   first_user_id    Int? // 방장 유저 아이디
   views            Int            @default(0)
   skills           String?
