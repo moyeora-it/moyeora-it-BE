@@ -30,7 +30,7 @@ model user {
   created_at           DateTime       @default(now())
   updated_at           DateTime       @updatedAt
   is_deleted           Boolean        @default(false)
-  position             Int[]
+  position             Int?
   skills               Int[]
   group                group[]
   reply                reply[]

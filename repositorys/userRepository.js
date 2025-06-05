@@ -45,6 +45,7 @@ const getUserInfo = async (userId) => {
       group: true,
       follower: true,
       following: true,
+      is_deleted: true,
       rated_ratings: {
         select: {
           rating: true,
@@ -119,13 +120,9 @@ const editUserInfo = async (
     ? skills.split(',').map((skill) => parseInt(skill.trim()))
     : [];
 
-  const positionArray = position
-    ? position.split(',').map((pos) => parseInt(pos.trim()))
-    : [];
-
   const updateData = {
     ...(nickname && { nickname }),
-    ...(positionArray && { position: positionArray }),
+    ...(position && { position }),
     ...(skillsArray && { skills: skillsArray }),
     ...(newPassword && { password: newPassword }),
     ...(image && { profile_image: image }),
@@ -186,6 +183,7 @@ const getByUserId = async (userId) => {
       skills: true,
       follower: true,
       following: true,
+      is_deleted: true,
       rated_ratings: {
         select: {
           rating: true,
