@@ -1,10 +1,11 @@
 import followRepository from '../repositorys/followRepository.js';
 import userRepository from '../repositorys/userRepository.js';
 
-const getFollowers = async (userId, size, cursor, name) => {
-  await userRepository.getUserInfo(userId);
+const getFollowers = async (userId, targetUserId, size, cursor, name) => {
+  await userRepository.getUserInfo(targetUserId);
   const followers = await followRepository.getFollowers(
     userId,
+    targetUserId,
     size,
     cursor,
     name
@@ -12,10 +13,11 @@ const getFollowers = async (userId, size, cursor, name) => {
   return followers;
 };
 
-const getFollowing = async (userId, size, cursor, name) => {
-  await userRepository.getUserInfo(userId);
+const getFollowing = async (userId, targetUserId, size, cursor, name) => {
+  await userRepository.getUserInfo(targetUserId);
   const following = await followRepository.getFollowing(
     userId,
+    targetUserId,
     size,
     cursor,
     name

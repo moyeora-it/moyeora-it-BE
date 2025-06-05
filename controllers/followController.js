@@ -1,11 +1,13 @@
 import followService from '../services/followService.js';
 
 const getFollowers = async (req, res) => {
-  const { userId } = req.params;
+  const { id: userId } = req.user;
+  const { userId: targetUserId } = req.params;
   const { size, cursor, name } = req.query;
   try {
     const followers = await followService.getFollowers(
       parseInt(userId),
+      parseInt(targetUserId),
       parseInt(size) || 10,
       parseInt(cursor) || 0,
       name || null
@@ -19,11 +21,13 @@ const getFollowers = async (req, res) => {
 };
 
 const getFollowing = async (req, res) => {
-  const { userId } = req.params;
+  const { id: userId } = req.user;
+  const { userId: targetUserId } = req.params;
   const { size, cursor, name } = req.query;
   try {
     const following = await followService.getFollowing(
       parseInt(userId),
+      parseInt(targetUserId),
       parseInt(size) || 10,
       parseInt(cursor) || 0,
       name || null
