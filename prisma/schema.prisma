@@ -43,7 +43,7 @@ model user {
   updated_at           DateTime       @updatedAt
   is_deleted           Boolean        @default(false)
   position             position?
-  skills               String
+  skills               String?
   group                group[]
   reply                reply[]
   bookmark             bookmark[]
@@ -68,7 +68,7 @@ model group {
   positions        position[]
   first_user_id    Int? // 방장 유저 아이디
   views            Int            @default(0)
-  skills           String
+  skills           String?
   type             String //study, project, all
   status           Boolean        @default(true) // 모집 상태 기본값 True
   auto_allow       Boolean
