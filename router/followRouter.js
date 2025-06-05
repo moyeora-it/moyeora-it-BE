@@ -146,7 +146,11 @@ const router = express.Router();
  *                       type: string
  *                       example: "서버 에러가 발생했습니다."
  */
-router.get('/:userId/followers', followController.getFollowers);
+router.get(
+  '/:userId/followers',
+  jwtToken.accessVerifyToken,
+  followController.getFollowers
+);
 
 /**
  * @swagger
@@ -290,7 +294,11 @@ router.get('/:userId/followers', followController.getFollowers);
  *                       type: string
  *                       example: "서버 에러가 발생했습니다."
  */
-router.get('/:userId/following', followController.getFollowing);
+router.get(
+  '/:userId/following',
+  jwtToken.accessVerifyToken,
+  followController.getFollowing
+);
 
 /**
  * @swagger
