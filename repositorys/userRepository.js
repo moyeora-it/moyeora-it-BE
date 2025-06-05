@@ -116,12 +116,12 @@ const editUserInfo = async (
 
   // skills 문자열을 배열로 변환
   const skillsArray = skills
-    ? skills.split(',').map((skill) => skill.trim())
-    : undefined;
+    ? skills.split(',').map((skill) => parseInt(skill.trim()))
+    : [];
 
   const positionArray = position
-    ? position.split(',').map((position) => position.trim())
-    : undefined;
+    ? position.split(',').map((pos) => parseInt(pos.trim()))
+    : [];
 
   const updateData = {
     ...(nickname && { nickname }),
