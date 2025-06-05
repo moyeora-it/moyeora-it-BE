@@ -3,9 +3,9 @@ import prisma from '../config/prisma.js';
 const getFollowers = async (userId, targetUserId, size, cursor, name) => {
   // name이 null이면 검색 조건을 제외
   const whereCondition = {
-    follower_id: targetUserId,
+    following_id: targetUserId,
     ...(name && {
-      follower: {
+      following: {
         nickname: { contains: name, mode: 'insensitive' },
       },
     }),
@@ -78,9 +78,9 @@ const getFollowers = async (userId, targetUserId, size, cursor, name) => {
 
 const getFollowing = async (userId, targetUserId, size, cursor, name) => {
   const whereCondition = {
-    following_id: targetUserId,
+    follower_id: targetUserId,
     ...(name && {
-      following: {
+      follower: {
         nickname: { contains: name, mode: 'insensitive' },
       },
     }),
