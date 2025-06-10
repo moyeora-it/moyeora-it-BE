@@ -35,26 +35,40 @@ const deleteUser = async (userId) => {
 const getUserInfo = async (userId) => {
   const user = await prisma.user.findUnique({
     where: { id: userId },
-    select: {
-      id: true,
-      email: true,
-      nickname: true,
-      profile_image: true,
-      position: true,
-      skills: true,
+    include: {
+      follower: {
+        include: {
+          following: {
+            select: {
+              id: true,
+              email: true,
+              nickname: true,
+              profile_image: true,
+            },
+          },
+        },
+      },
+      following: {
+        include: {
+          follower: {
+            select: {
+              id: true,
+              email: true,
+              nickname: true,
+              profile_image: true,
+            },
+          },
+        },
+      },
       group: true,
-      follower: true,
-      following: true,
-      is_deleted: true,
+      waiting_list: true,
+      bookmark: true,
+      reply: true,
       rated_ratings: {
         select: {
           rating: true,
         },
       },
-      waiting_list: true,
-      bookmark: true,
-      reply: true,
-      _count: true,
     },
   });
 
@@ -69,11 +83,19 @@ const getUserInfo = async (userId) => {
         10
       : 0;
 
-  const { profile_image, ...rest } = user;
+  const { profile_image, follower, following, ...rest } = user;
   return {
     items: {
       ...rest,
       profileImage: profile_image,
+      followers: user.following.map((f) => ({
+        ...f.follower,
+        profileImage: f.follower.profile_image,
+      })),
+      following: user.follower.map((f) => ({
+        ...f.following,
+        profileImage: f.following.profile_image,
+      })),
     },
     averageRating,
   };
@@ -175,15 +197,31 @@ const getUserByEmail = async (email) => {
 const getByUserId = async (userId) => {
   const user = await prisma.user.findUnique({
     where: { id: userId },
-    select: {
-      email: true,
-      nickname: true,
-      profile_image: true,
-      position: true,
-      skills: true,
-      follower: true,
-      following: true,
-      is_deleted: true,
+    include: {
+      follower: {
+        include: {
+          following: {
+            select: {
+              id: true,
+              email: true,
+              nickname: true,
+              profile_image: true,
+            },
+          },
+        },
+      },
+      following: {
+        include: {
+          follower: {
+            select: {
+              id: true,
+              email: true,
+              nickname: true,
+              profile_image: true,
+            },
+          },
+        },
+      },
       rated_ratings: {
         select: {
           rating: true,
@@ -197,11 +235,19 @@ const getByUserId = async (userId) => {
       ? Math.round((ratings.reduce((a, b) => a + b, 0) / ratings.length) * 10) /
         10
       : 0;
-  const { profile_image, ...rest } = user;
+  const { profile_image, follower, following, ...rest } = user;
   return {
     ...rest,
     profileImage: profile_image,
     averageRating,
+    followers: user.following.map((f) => ({
+      ...f.follower,
+      profileImage: f.follower.profile_image,
+    })),
+    following: user.follower.map((f) => ({
+      ...f.following,
+      profileImage: f.following.profile_image,
+    })),
   };
 };
 
