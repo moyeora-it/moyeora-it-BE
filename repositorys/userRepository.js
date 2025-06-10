@@ -303,21 +303,35 @@ const checkEmail = async (email) => {
 };
 
 const resetPassword = async (email) => {
-  const user = await prisma.user.findUnique({
-    where: { email },
-  });
-  if (!user) {
-    throw new Error('존재하지 않는 이메일입니다.');
-  }
-  const newPassword = Math.random().toString(36).substring(2, 15);
-  const hashedPassword = await bcrypt.hash(newPassword, 10);
-  await sendEmailAuth(email, newPassword);
-  await prisma.user.update({
-    where: { email },
-    data: { password: hashedPassword },
-  });
+  try {
+    const result = await prisma.$transaction(async (tx) => {
+      const user = await tx.user.findUnique({
+        where: { email },
+      });
+      if (!user) {
+        throw new Error('존재하지 않는 이메일입니다.');
+      }
 
-  return;
+      const newPassword = Math.random().toString(36).substring(2, 15);
+      const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+      await sendEmailAuth(email, newPassword);
+
+      await tx.user.update({
+        where: { email },
+        data: { password: hashedPassword },
+      });
+
+      return newPassword;
+    });
+
+    return result;
+  } catch (error) {
+    if (error.message === '존재하지 않는 이메일입니다.') {
+      throw error;
+    }
+    throw new Error('비밀번호 재설정 중 오류가 발생했습니다.');
+  }
 };
 
 const passwordChange = async (userId, newPassword, confirmPassword) => {
