@@ -185,6 +185,17 @@ const createFollow = async (followerId, followingId) => {
 };
 
 const deleteFollow = async (userId, targetUserId) => {
+  const followCheck = await prisma.follow.findUnique({
+    where: {
+      follower_id_following_id: {
+        follower_id: userId,
+        following_id: targetUserId,
+      },
+    },
+  });
+  if (!followCheck) {
+    throw new Error('팔로우 관계가 존재하지 않습니다.');
+  }
   const follow = await prisma.follow.delete({
     where: {
       follower_id_following_id: {
@@ -197,6 +208,17 @@ const deleteFollow = async (userId, targetUserId) => {
 };
 
 const deleteFollower = async (userId, targetUserId) => {
+  const followCheck = await prisma.follow.findUnique({
+    where: {
+      follower_id_following_id: {
+        follower_id: targetUserId,
+        following_id: userId,
+      },
+    },
+  });
+  if (!followCheck) {
+    throw new Error('팔로우 관계가 존재하지 않습니다.');
+  }
   const follow = await prisma.follow.delete({
     where: {
       follower_id_following_id: {
