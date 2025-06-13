@@ -8,6 +8,7 @@ export default function socket(socketIo) {
     socket.on('login', (userId) => {
       userSocketMap.set(userId, socket.id);
       console.log(`사용자 ${userId}가 소켓 ${socket.id}로 로그인했습니다.`);
+      socket.emit('loginSuccess', { userId });
     });
 
     socket.on('disconnect', (reason) => {
